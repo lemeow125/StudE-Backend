@@ -52,4 +52,8 @@ class CustomUser(AbstractUser):
     semester = models.CharField(
         max_length=50, choices=SEMESTERS)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
     pass
