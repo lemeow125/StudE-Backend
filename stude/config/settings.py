@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'rest_framework.authtoken',
-    'accounts',
+
 ]
 
 MIDDLEWARE = [
@@ -81,12 +82,6 @@ REST_FRAMEWORK = {
     )
 }
 
-DJOSER = {
-    'SEND_ACTIVATION_EMAIL': True,
-    'SEND_CONFIRMATION_EMAIL': True,
-    'ACTIVATION_URL': 'activation/{uid}/{token}',
-}
-
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
@@ -99,6 +94,20 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+DJOSER = {
+    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'ACTIVATION_URL': 'activation/{uid}/{token}',
+    'USER_AUTHENTICATION_RULES': ['djoser.authentication.TokenAuthenticationRule'],
+    'SERIALIZERS': {
+        'user': 'accounts.serializers.CustomUserSerializer',
+        'user_create': 'accounts.serializers.UserRegistrationSerializer',
+    },
+}
+
 
 # Email credentials
 if (DEBUG == True):
