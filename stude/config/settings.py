@@ -31,11 +31,27 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+# Email credentials
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = ''
+
+if (DEBUG == True):
+    EMAIL_HOST = str(os.getenv('DEV_EMAIL_HOST'))
+    EMAIL_HOST_USER = str(os.getenv('DEV_EMAIL_HOST_USER'))
+    EMAIL_HOST_PASSWORD = str(os.getenv('DEV_EMAIL_HOST_PASSWORD'))
+    EMAIL_PORT = str(os.getenv('DEV_EMAIL_PORT'))
+else:
+    EMAIL_HOST = str(os.getenv('PROD_EMAIL_HOST'))
+    EMAIL_HOST_USER = str(os.getenv('PROD_EMAIL_HOST_USER'))
+    EMAIL_HOST_PASSWORD = str(os.getenv('PROD_EMAIL_HOST_PASSWORD'))
+    EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
+
 
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'rest_framework.authtoken',
+    'accounts',
 
 ]
 
@@ -107,19 +124,6 @@ DJOSER = {
         'user_create': 'accounts.serializers.UserRegistrationSerializer',
     },
 }
-
-
-# Email credentials
-if (DEBUG == True):
-    EMAIL_HOST = str(os.getenv('DEV_EMAIL_HOST'))
-    EMAIL_HOST_USER = str(os.getenv('DEV_EMAIL_HOST_USER'))
-    EMAIL_HOST_PASSWORD = str(os.getenv('DEV_EMAIL_HOST_PASSWORD'))
-    EMAIL_PORT = str(os.getenv('DEV_EMAIL_PORT'))
-else:
-    EMAIL_HOST = str(os.getenv('PROD_EMAIL_HOST'))
-    EMAIL_HOST_USER = str(os.getenv('PROD_EMAIL_HOST_USER'))
-    EMAIL_HOST_PASSWORD = str(os.getenv('PROD_EMAIL_HOST_PASSWORD'))
-    EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
