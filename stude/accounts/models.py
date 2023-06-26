@@ -14,15 +14,6 @@ def validate_student_id(value):
 
 
 class CustomUser(AbstractUser):
-    def _get_upload_to(instance, filename):
-        base_filename, file_extension = os.path.splitext(filename)
-        # Convert filename to a slug format
-        cleaned_filename = slugify(base_filename)
-        # Get the student ID number
-        student_id = str(instance.student_id_number)
-        new_filename = f"{student_id}_{cleaned_filename}{file_extension}"
-        return os.path.join('avatars', new_filename)
-
     YEAR_LEVELS = (
         ('1st', '1st year'),
         ('2nd', '2nd year'),
@@ -35,6 +26,16 @@ class CustomUser(AbstractUser):
         ('1st', '1st semester'),
         ('2nd', '2nd semester'),
     )
+
+    def _get_upload_to(instance, filename):
+        base_filename, file_extension = os.path.splitext(filename)
+        # Convert filename to a slug format
+        cleaned_filename = slugify(base_filename)
+        # Get the student ID number
+        student_id = str(instance.student_id_number)
+        new_filename = f"{student_id}_{cleaned_filename}{file_extension}"
+        return os.path.join('avatars', new_filename)
+
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     # Email inherited from base user class
