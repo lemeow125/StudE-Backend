@@ -100,10 +100,17 @@ DATABASES = {
     }
 }
 
-EMAIL_HOST = str(os.getenv('EMAIL_HOST'))
-EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
-EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
-EMAIL_PORT = str(os.getenv('EMAIL_PORT'))
+# Email credentials
+if (DEBUG == True):
+    EMAIL_HOST = str(os.getenv('DEV_EMAIL_HOST'))
+    EMAIL_HOST_USER = str(os.getenv('DEV_EMAIL_HOST_USER'))
+    EMAIL_HOST_PASSWORD = str(os.getenv('DEV_EMAIL_HOST_PASSWORD'))
+    EMAIL_PORT = str(os.getenv('DEV_EMAIL_PORT'))
+else:
+    EMAIL_HOST = str(os.getenv('PROD_EMAIL_HOST'))
+    EMAIL_HOST_USER = str(os.getenv('PROD_EMAIL_HOST_USER'))
+    EMAIL_HOST_PASSWORD = str(os.getenv('PROD_EMAIL_HOST_PASSWORD'))
+    EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
