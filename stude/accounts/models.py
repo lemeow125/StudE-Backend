@@ -28,5 +28,5 @@ class CustomUser(AbstractUser):
         max_length=50, choices=YEAR_LEVELS)
     semester = models.CharField(
         max_length=50, choices=SEMESTERS)
-    avatar = models.ImageField(upload_to='images', null=True)
+    avatar = models.ImageField(upload_to='media/avatars', null=True)
     pass
