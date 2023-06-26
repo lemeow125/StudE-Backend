@@ -63,6 +63,7 @@ db.sqlite3-journal
 
 # Static Media Stuff
 stude/media/*
+stude/static/*
 
 # Flask stuff:
 instance/

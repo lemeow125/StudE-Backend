@@ -9,6 +9,7 @@ djangorestframework = "*"
 python-dotenv = "*"
 djoser = "*"
 pillow = "*"
+whitenoise = "*"
 
 [dev-packages]
 
