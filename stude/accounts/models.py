@@ -1,8 +1,28 @@
+import time
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 from django.db import models
+import os
+
+
+def validate_student_id(value):
+    try:
+        int(value)
+    except (ValueError, TypeError):
+        raise ValidationError('Student ID must be a valid integer.')
 
 
 class CustomUser(AbstractUser):
+    def _get_upload_to(instance, filename):
+        base_filename, file_extension = os.path.splitext(filename)
+        # Convert filename to a slug format
+        cleaned_filename = slugify(base_filename)
+        # Get the student ID number
+        student_id = str(instance.student_id_number)
+        new_filename = f"{student_id}_{cleaned_filename}{file_extension}"
+        return os.path.join('avatars', new_filename)
+
     YEAR_LEVELS = (
         ('1st', '1st year'),
         ('2nd', '2nd year'),
@@ -24,9 +44,11 @@ class CustomUser(AbstractUser):
     is_student = models.BooleanField(default=True)
     is_studying = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
+    student_id_number = models.CharField(
+        max_length=16, validators=[validate_student_id], null=False)
     year_level = models.CharField(
         max_length=50, choices=YEAR_LEVELS)
     semester = models.CharField(
         max_length=50, choices=SEMESTERS)
-    avatar = models.ImageField(upload_to='avatars', null=True)
+    avatar = models.ImageField(upload_to=_get_upload_to, null=True)
     pass

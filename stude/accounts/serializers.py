@@ -12,4 +12,4 @@ class CustomUserSerializer(BaseUserSerializer):
 class UserRegistrationSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
         fields = ('username', 'email', 'password',
-                  'is_student', 'year_level', 'semester', 'avatar')
+                  'is_student', 'student_id_number', 'year_level', 'semester', 'avatar')
