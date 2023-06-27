@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'accounts',
     'student_status',
     'courses',
+    'year_levels',
 ]
 
 MIDDLEWARE = [

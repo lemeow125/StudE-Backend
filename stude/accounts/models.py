@@ -5,6 +5,10 @@ from django.utils.text import slugify
 from django.db import models
 import os
 from courses.models import Course
+from year_levels.models import Year_Level
+from django.db.models.signals import post_migrate
+from django.dispatch import receiver
+from dotenv import load_dotenv
 
 
 def validate_student_id(value):
@@ -58,8 +62,26 @@ class CustomUser(AbstractUser):
         on_delete=models.CASCADE,
         null=True
     )
+    semester = models.ForeignKey(
+        Year_Level,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
     pass
+
+
+@receiver(post_migrate)
+def create_superuser(sender, **kwargs):
+    if sender.name == 'accounts':
+        User = CustomUser
+        username = os.getenv('DJANGO_ADMIN_USERNAME')
+        email = os.getenv('DJANGO_ADMIN_EMAIL')
+        password = os.getenv('DJANGO_ADMIN_PASSWORD')
+
+        if not User.objects.filter(username=username).exists():
+            User.objects.create_superuser(
+                username, email, password)
