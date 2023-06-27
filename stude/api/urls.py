@@ -7,5 +7,6 @@ urlpatterns = [
     path('courses/', include('courses.urls')),
     path('year_levels/', include('year_levels.urls')),
     path('semesters/', include('semesters.urls')),
-    path('subjects/', include('subjects.urls'))
+    path('subjects/', include('subjects.urls')),
+    path('study_groups/', include('study_groups.urls'))
 ]
