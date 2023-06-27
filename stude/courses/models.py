@@ -9,7 +9,7 @@ class Course(models.Model):
     shortname = models.CharField(max_length=16)
 
     def __str__(self):
-        return self.shortname
+        return self.name
 
 
 @receiver(post_migrate)

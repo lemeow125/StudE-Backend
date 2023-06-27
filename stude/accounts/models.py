@@ -6,6 +6,7 @@ from django.db import models
 import os
 from courses.models import Course
 from year_levels.models import Year_Level
+from semesters.models import Semester
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from dotenv import load_dotenv
@@ -19,19 +20,6 @@ def validate_student_id(value):
 
 
 class CustomUser(AbstractUser):
-    YEAR_LEVELS = (
-        ('1st', '1st year'),
-        ('2nd', '2nd year'),
-        ('3rd', '3rd year'),
-        ('4th', '4th year'),
-        ('5th', '5th Year'),
-        ('Irreg', 'Irregular'),
-    )
-    SEMESTERS = (
-        ('1st', '1st semester'),
-        ('2nd', '2nd semester'),
-    )
-
     def _get_upload_to(instance, filename):
         base_filename, file_extension = os.path.splitext(filename)
         # Convert filename to a slug format
@@ -52,18 +40,19 @@ class CustomUser(AbstractUser):
     is_banned = models.BooleanField(default=False)
     student_id_number = models.CharField(
         max_length=16, validators=[validate_student_id], null=False)
-    year_level = models.CharField(
-        max_length=50, choices=YEAR_LEVELS)
-    semester = models.CharField(
-        max_length=50, choices=SEMESTERS)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
         null=True
     )
-    semester = models.ForeignKey(
+    year_level = models.ForeignKey(
         Year_Level,
+        on_delete=models.CASCADE,
+        null=True
+    )
+    semester = models.ForeignKey(
+        Semester,
         on_delete=models.CASCADE,
         null=True
     )
