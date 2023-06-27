@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'year_levels',
     'semesters',
     'subjects',
+    'study_groups',
 ]
 
 MIDDLEWARE = [
