@@ -26,6 +26,11 @@ class CustomUser(AbstractUser):
         ('1st', '1st semester'),
         ('2nd', '2nd semester'),
     )
+    COURSES = (
+        ('BSIT', 'Bachelor of Science in Information Technology'),
+        ('BSCS', 'Bachelor of Science in Computer Science'),
+        ('BSCpE', 'Bachelor of Science in Computer Engineering'),
+    )
 
     def _get_upload_to(instance, filename):
         base_filename, file_extension = os.path.splitext(filename)
@@ -51,6 +56,8 @@ class CustomUser(AbstractUser):
         max_length=50, choices=YEAR_LEVELS)
     semester = models.CharField(
         max_length=50, choices=SEMESTERS)
+    course = models.CharField(
+        max_length=50, choices=COURSES)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
 
     @property

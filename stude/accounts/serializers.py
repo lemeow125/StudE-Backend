@@ -12,19 +12,17 @@ class CustomUserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
         fields = ('username', 'email', 'password',
-                  'student_id_number', 'year_level', 'semester', 'avatar', 'first_name', 'last_name', 'is_banned', 'user_status')
+                  'student_id_number', 'year_level', 'semester', 'course', 'avatar', 'first_name', 'last_name', 'is_banned', 'user_status')
 
 
 class UserRegistrationSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
         fields = ('username', 'email', 'password',
-                  'student_id_number', 'year_level', 'semester', 'avatar', 'first_name', 'last_name')
+                  'student_id_number', 'year_level', 'semester', 'course', 'avatar', 'first_name', 'last_name')
 
     def create(self, validated_data):
         # Get the user's year_level and semester from the user model instance
         user = self.Meta.model(**validated_data)
-        year_level = user.year_level
-        semester = user.semester
 
         # Create a new user using the base serializer's create() method
         user = super().create(validated_data)
@@ -32,8 +30,6 @@ class UserRegistrationSerializer(BaseUserRegistrationSerializer):
         # Create a student_status object for the user
         StudentStatus.objects.create(
             user=user,
-            year_level=year_level,
-            semester=semester,
             active=False,
             x=None,
             y=None,

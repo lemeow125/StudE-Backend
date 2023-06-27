@@ -22,8 +22,5 @@ class StudentStatus(models.Model):
     x = models.FloatField(null=True)
     y = models.FloatField(null=True)
     subject = models.CharField(max_length=100, null=True)
-    year_level = models.CharField(
-        max_length=50, choices=CustomUser.YEAR_LEVELS)
-    semester = models.CharField(max_length=50, choices=CustomUser.SEMESTERS)
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)

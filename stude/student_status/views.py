@@ -1,10 +1,10 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import StudentStatus
 from .serializers import StudentStatusSerializer
 
 
-class StudentStatusAPIView(generics.RetrieveUpdateDestroyAPIView):
+class StudentStatusAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = StudentStatusSerializer
     permission_classes = [IsAuthenticated]
 
