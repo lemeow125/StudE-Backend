@@ -14,10 +14,10 @@ class Semester(models.Model):
 
 
 @receiver(post_migrate)
-def populate_courses(sender, **kwargs):
+def populate_semesters(sender, **kwargs):
     if sender.name == 'semesters':
         Semester.objects.get_or_create(
-            name='1st Semester', shortname='1st')
+            name='1st Semester', shortname='1stSem')
         Semester.objects.get_or_create(
-            name='2nd Semester', shortname='2nd')
+            name='2nd Semester', shortname='2ndSem')
         # Add more predefined records as needed
