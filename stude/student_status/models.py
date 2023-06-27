@@ -14,5 +14,5 @@ class StudentStatus(models.Model):
         'subjects.Subject', on_delete=models.CASCADE, null=True)
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)
-    study_group = models.ForeignKey(
-        StudyGroup, on_delete=models.SET_NULL, null=True)
+    study_group = models.ManyToManyField(
+        'study_groups.StudyGroup', through='study_groups.StudyGroupMembership', blank=True)
