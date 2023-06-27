@@ -8,7 +8,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': ('student_id_number',
-         'year_level', 'semester', 'avatar', 'is_student', 'is_banned')}),
+         'year_level', 'semester', 'course', 'avatar', 'is_student', 'is_banned')}),
     )
 
 

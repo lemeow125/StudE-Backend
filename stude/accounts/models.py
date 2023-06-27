@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.db import models
 import os
+from courses.models import Course
 
 
 def validate_student_id(value):
@@ -25,11 +26,6 @@ class CustomUser(AbstractUser):
     SEMESTERS = (
         ('1st', '1st semester'),
         ('2nd', '2nd semester'),
-    )
-    COURSES = (
-        ('BSIT', 'Bachelor of Science in Information Technology'),
-        ('BSCS', 'Bachelor of Science in Computer Science'),
-        ('BSCpE', 'Bachelor of Science in Computer Engineering'),
     )
 
     def _get_upload_to(instance, filename):
@@ -56,9 +52,12 @@ class CustomUser(AbstractUser):
         max_length=50, choices=YEAR_LEVELS)
     semester = models.CharField(
         max_length=50, choices=SEMESTERS)
-    course = models.CharField(
-        max_length=50, choices=COURSES)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        null=True
+    )
 
     @property
     def full_name(self):
