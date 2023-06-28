@@ -1,6 +1,6 @@
 from django.contrib import admin
 from courses.models import Course
-from .models import Subject
+from .models import Subject, SubjectStudent
 
 
 class SubjectAdmin(admin.ModelAdmin):
@@ -8,3 +8,4 @@ class SubjectAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Subject, SubjectAdmin)
+admin.site.register(SubjectStudent)

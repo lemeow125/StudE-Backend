@@ -54,6 +54,8 @@ class CustomUser(AbstractUser):
         on_delete=models.CASCADE,
         null=True
     )
+    subjects = models.ManyToManyField(
+        'subjects.Subject', through='subjects.SubjectStudent', related_name='SubjectStudent_user')
 
     @property
     def full_name(self):

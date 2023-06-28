@@ -1,5 +1,6 @@
 from djoser.serializers import UserCreateSerializer as BaseUserRegistrationSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
+from rest_framework import serializers
 from accounts.models import CustomUser
 from student_status.serializers import StudentStatusSerializer
 from student_status.models import StudentStatus
@@ -12,13 +13,13 @@ class CustomUserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
         fields = ('username', 'email', 'password',
-                  'student_id_number', 'year_level', 'semester', 'course', 'avatar', 'first_name', 'last_name', 'is_banned', 'user_status')
+                  'student_id_number', 'year_level', 'semester', 'course', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned', 'user_status')
 
 
 class UserRegistrationSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
         fields = ('username', 'email', 'password',
-                  'student_id_number', 'year_level', 'semester', 'course', 'avatar', 'first_name', 'last_name')
+                  'student_id_number', 'year_level', 'semester', 'course', 'subjects', 'avatar', 'first_name', 'last_name')
 
     def create(self, validated_data):
         # Get the user's year_level and semester from the user model instance
