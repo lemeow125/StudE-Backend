@@ -11,6 +11,7 @@ from djangochannelsrestframework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
 )
+from djangochannelsrestframework.permissions import IsAuthenticated
 
 
 class StudentStatusConsumer(
@@ -18,8 +19,8 @@ class StudentStatusConsumer(
         RetrieveModelMixin,
         GenericAsyncAPIConsumer,
 ):
-
-    queryset = StudentStatus.objects.all()
+    permission_classes = [IsAuthenticated]
+    queryset = StudentStatus.objects.filter(active=True)
     serializer_class = StudentStatusSerializer
 
     async def websocket_connect(self, message):
@@ -41,9 +42,9 @@ class StudentStatusConsumer(
         while True:
             try:
                 data = await self.get_student_statuses()
-                print(f"Sending update: {data}")  # existing debug statement
+                # print(f"Sending update: {data}") Debug
                 await self.send(text_data=json.dumps(data))
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(5)
             except Exception as e:
                 print(f"Exception in send_updates: {e}")
                 break  # Break the loop on error
