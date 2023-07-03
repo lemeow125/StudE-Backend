@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from django.core.management.commands.runserver import Command as runserver
 
 
 def main():
@@ -19,4 +20,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # Override default port for `runserver` command
+    runserver.default_addr = '0.0.0.0'
     main()
