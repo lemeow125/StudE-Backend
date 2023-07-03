@@ -29,7 +29,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*', '127.0.0.1', 'localhost', '10.0.10.32', '10.0.10.8']
 
 # Email credentials
 EMAIL_HOST = ''
