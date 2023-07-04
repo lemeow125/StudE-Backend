@@ -41,17 +41,17 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
     course = models.ForeignKey(
         Course,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
     year_level = models.ForeignKey(
         Year_Level,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
     semester = models.ForeignKey(
         Semester,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
     subjects = models.ManyToManyField(

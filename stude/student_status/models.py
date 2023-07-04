@@ -11,7 +11,7 @@ class StudentStatus(models.Model):
     x = models.FloatField(null=True)
     y = models.FloatField(null=True)
     subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE, null=True)
+        'subjects.Subject', on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)
     study_group = models.ManyToManyField(
