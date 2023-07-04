@@ -13,11 +13,15 @@ from django.contrib.auth.password_validation import validate_password
 class CustomUserSerializer(BaseUserSerializer):
     user_status = StudentStatusSerializer(
         source='studentstatus', read_only=True)
+    course = serializers.StringRelatedField()
+    year_level = serializers.StringRelatedField()
+    semester = serializers.StringRelatedField()
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
         fields = ('username', 'email',
                   'student_id_number', 'year_level', 'semester', 'course', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned', 'user_status')
+        read_only_fields = ('is_banned', 'user_status')
 
 # The model from your custom user
 
