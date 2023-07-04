@@ -142,6 +142,7 @@ DJOSER = {
     'USER_AUTHENTICATION_RULES': ['djoser.authentication.TokenAuthenticationRule'],
     'SERIALIZERS': {
         'user': 'accounts.serializers.CustomUserSerializer',
+        'current_user': 'accounts.serializers.CustomUserSerializer',
         'user_create': 'accounts.serializers.UserRegistrationSerializer',
     },
 }

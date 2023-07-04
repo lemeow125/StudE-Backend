@@ -16,7 +16,7 @@ class CustomUserSerializer(BaseUserSerializer):
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
-        fields = ('username', 'email', 'password',
+        fields = ('username', 'email',
                   'student_id_number', 'year_level', 'semester', 'course', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned', 'user_status')
 
 # The model from your custom user
