@@ -36,6 +36,7 @@ EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = ''
+EMAIL_USE_TLS = False
 
 if (DEBUG == True):
     EMAIL_HOST = str(os.getenv('DEV_EMAIL_HOST'))
@@ -47,6 +48,7 @@ else:
     EMAIL_HOST_USER = str(os.getenv('PROD_EMAIL_HOST_USER'))
     EMAIL_HOST_PASSWORD = str(os.getenv('PROD_EMAIL_HOST_PASSWORD'))
     EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
+    EMAIL_USE_TLS = str(os.getenv('PROD_EMAIL_TLS'))
 
 
 # Application definition
@@ -94,7 +96,9 @@ ASGI_APPLICATION = "config.asgi.application"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,6 +135,9 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'SEND_CONFIRMATION_EMAIL': True,
+    'EMAIL': {
+        'activation': 'config.email.ActivationEmail'
+    },
     'ACTIVATION_URL': 'activation/{uid}/{token}',
     'USER_AUTHENTICATION_RULES': ['djoser.authentication.TokenAuthenticationRule'],
     'SERIALIZERS': {
@@ -183,4 +190,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DOMAIN = 'stude://'
+DOMAIN = ''
+if (DEBUG):
+    DOMAIN = 'exp'
+else:
+    DOMAIN = 'stude'
+
+SITE_NAME = 'Stud-E'
