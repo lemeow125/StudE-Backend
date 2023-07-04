@@ -33,6 +33,7 @@ class CustomUser(AbstractUser):
     # Username inherited from base user class
     # Password inherited from base user class
     # is_admin inherited from base user class
+    is_active = models.BooleanField(default=False)
     is_student = models.BooleanField(default=True)
     is_studying = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)

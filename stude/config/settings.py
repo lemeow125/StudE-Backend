@@ -196,4 +196,5 @@ if (DEBUG):
 else:
     DOMAIN = 'stude'
 
+
 SITE_NAME = 'Stud-E'
