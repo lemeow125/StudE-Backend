@@ -24,6 +24,6 @@ def populate_courses(sender, **kwargs):
             name='3rd Year', shortname='3rdYr')
         Year_Level.objects.get_or_create(
             name='4th Year', shortname='4thYr')
-        Year_Level.objects.get_or_create(
-            name='Irregular', shortname='Irreg')
+        # Year_Level.objects.get_or_create(
+        # name='Irregular', shortname='Irreg')
         # Add more predefined records as needed
