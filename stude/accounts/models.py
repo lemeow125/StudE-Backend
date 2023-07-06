@@ -33,6 +33,7 @@ class CustomUser(AbstractUser):
     # Username inherited from base user class
     # Password inherited from base user class
     # is_admin inherited from base user class
+    is_active = models.BooleanField(default=False)
     is_student = models.BooleanField(default=True)
     is_studying = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
@@ -41,17 +42,17 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
     course = models.ForeignKey(
         Course,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
     year_level = models.ForeignKey(
         Year_Level,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
     semester = models.ForeignKey(
         Semester,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True
     )
     subjects = models.ManyToManyField(
@@ -72,5 +73,10 @@ def create_superuser(sender, **kwargs):
         password = os.getenv('DJANGO_ADMIN_PASSWORD')
 
         if not User.objects.filter(username=username).exists():
-            User.objects.create_superuser(
-                username, email, password)
+            # Create the superuser with is_active set to False
+            superuser = User.objects.create_superuser(
+                username=username, email=email, password=password)
+
+            # Activate the superuser
+            superuser.is_active = True
+            superuser.save()

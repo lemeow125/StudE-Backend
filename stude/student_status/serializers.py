@@ -3,9 +3,11 @@ from .models import StudentStatus
 
 
 class StudentStatusSerializer(serializers.ModelSerializer):
-    year_level = serializers.CharField(source='user.year_level', read_only=True)
+    year_level = serializers.CharField(
+        source='user.year_level', read_only=True)
     course = serializers.CharField(source='user.course', read_only=True)
     semester = serializers.CharField(source='user.semester', read_only=True)
+    user = serializers.CharField(source='user.full_name', read_only=True)
 
     class Meta:
         model = StudentStatus
@@ -17,7 +19,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
         student_status = StudentStatus.objects.create(
             user=user, defaults=validated_data)
         return student_status
-    
+
     def update(self, instance, validated_data):
         active = validated_data.get('active', None)
 

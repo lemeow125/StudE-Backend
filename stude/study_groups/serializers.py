@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from .models import StudyGroup, StudyGroupMembership
 from accounts.models import CustomUser
+from subjects.models import Subject
 
 
 class StudyGroupSerializer(serializers.ModelSerializer):
     users = serializers.SlugRelatedField(
-        queryset=CustomUser.objects.all(), many=True, slug_field='name', allow_null=True)
-    subject = serializers.CharField(source='subject.Subject', read_only=True)
+        queryset=CustomUser.objects.all(), many=True, slug_field='name', required=False, allow_null=True)
+    subject = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
 
     class Meta:
         model = StudyGroup

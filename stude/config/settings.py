@@ -29,13 +29,14 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*', '127.0.0.1', 'localhost', '10.0.10.32', '10.0.10.8']
 
 # Email credentials
 EMAIL_HOST = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = ''
+EMAIL_USE_TLS = False
 
 if (DEBUG == True):
     EMAIL_HOST = str(os.getenv('DEV_EMAIL_HOST'))
@@ -47,11 +48,13 @@ else:
     EMAIL_HOST_USER = str(os.getenv('PROD_EMAIL_HOST_USER'))
     EMAIL_HOST_PASSWORD = str(os.getenv('PROD_EMAIL_HOST_PASSWORD'))
     EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
+    EMAIL_USE_TLS = str(os.getenv('PROD_EMAIL_TLS'))
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,8 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'djoser',
-    'rest_framework.authtoken',
     'accounts',
     'student_status',
     'courses',
@@ -88,10 +91,14 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'config.urls'
 
+ASGI_APPLICATION = "config.asgi.application"
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,7 +113,7 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
@@ -128,10 +135,14 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'SEND_CONFIRMATION_EMAIL': True,
+    'EMAIL': {
+        'activation': 'config.email.ActivationEmail'
+    },
     'ACTIVATION_URL': 'activation/{uid}/{token}',
     'USER_AUTHENTICATION_RULES': ['djoser.authentication.TokenAuthenticationRule'],
     'SERIALIZERS': {
         'user': 'accounts.serializers.CustomUserSerializer',
+        'current_user': 'accounts.serializers.CustomUserSerializer',
         'user_create': 'accounts.serializers.UserRegistrationSerializer',
     },
 }
@@ -179,3 +190,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DOMAIN = ''
+if (DEBUG):
+    DOMAIN = 'exp'
+else:
+    DOMAIN = 'stude'
+
+
+SITE_NAME = 'Stud-E'
