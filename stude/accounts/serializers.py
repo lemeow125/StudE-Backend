@@ -8,14 +8,20 @@ from student_status.serializers import StudentStatusSerializer
 from student_status.models import StudentStatus
 from rest_framework.settings import api_settings
 from django.contrib.auth.password_validation import validate_password
+from courses.models import Course
+from year_levels.models import Year_Level
+from semesters.models import Semester
 
 
 class CustomUserSerializer(BaseUserSerializer):
     user_status = StudentStatusSerializer(
         source='studentstatus', read_only=True)
-    course = serializers.StringRelatedField()
-    year_level = serializers.StringRelatedField()
-    semester = serializers.StringRelatedField()
+    course = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Course.objects.all(), required=False, allow_null=True)
+    year_level = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Year_Level.objects.all(), required=False, allow_null=True)
+    semester = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Semester.objects.all(), required=False, allow_null=True)
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
