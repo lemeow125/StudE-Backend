@@ -15,7 +15,7 @@ class StudentStatusAPIView(generics.RetrieveUpdateAPIView):
 
 class ActiveStudentStatusListAPIView(generics.ListAPIView):
     serializer_class = StudentStatusSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
