@@ -11,6 +11,7 @@ from django.contrib.auth.password_validation import validate_password
 from courses.models import Course
 from year_levels.models import Year_Level
 from semesters.models import Semester
+from django.contrib.gis.geos import Point
 
 
 class CustomUserSerializer(BaseUserSerializer):
@@ -35,7 +36,8 @@ class CustomUserSerializer(BaseUserSerializer):
 class UserRegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     student_id_number = serializers.CharField(required=True)
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(
+        write_only=True, style={'input_type': 'password', 'placeholder': 'Password'})
 
     class Meta:
         model = CustomUser    # Use your custom user model here
@@ -64,8 +66,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         StudentStatus.objects.create(
             user=user,
             active=False,
-            x=None,
-            y=None,
+            location=Point(0, 0),
             subject=None
         )
         return user

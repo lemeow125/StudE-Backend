@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from .models import StudentStatus
+from subjects.models import Subject
+from django.contrib.gis.geos import Point
 
 
 class StudentStatusSerializer(serializers.ModelSerializer):
-    year_level = serializers.CharField(
-        source='user.year_level', read_only=True)
-    course = serializers.CharField(source='user.course', read_only=True)
-    semester = serializers.CharField(source='user.semester', read_only=True)
+    subject = serializers.SlugRelatedField(
+        queryset=Subject.objects.all(), slug_field='name', required=True)
     user = serializers.CharField(source='user.full_name', read_only=True)
 
     class Meta:
@@ -24,8 +24,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
         active = validated_data.get('active', None)
 
         if active is not None and active is False:
-            validated_data['x'] = None
-            validated_data['y'] = None
+            validated_data['location'] = Point(0, 0)
             validated_data['subject'] = None
 
         return super().update(instance, validated_data)
