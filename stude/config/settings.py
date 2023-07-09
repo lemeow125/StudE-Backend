@@ -54,7 +54,8 @@ else:
 # Will need to install OSGeo4W for this!
 if os.name == 'nt':
     OSGEO4W = r"C:\OSGeo4W"
-    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+    if not os.path.isdir(OSGEO4W):
+        OSGEO4W += '64'
     os.environ['OSGEO4W_ROOT'] = OSGEO4W
     os.environ['GDAL_DATA'] = "C:\Program Files\GDAL\gdal-data"
     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
