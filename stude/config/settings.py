@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv  # Python dotenv
 import os
 
+
 load_dotenv()  # loads the configs from .env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -50,8 +51,10 @@ else:
     EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
     EMAIL_USE_TLS = str(os.getenv('PROD_EMAIL_TLS'))
 
-
-# Application definition
+GEOS_LIBRARY_PATH = str(os.environ.get('VIRTUAL_ENV') +
+                        r"\Lib\site-packages\osgeo\geos_c.dll")
+GDAL_LIBRARY_PATH = str(os.environ.get('VIRTUAL_ENV') +
+                        r"\Lib\site-packages\osgeo\gdal304.dll")
 
 INSTALLED_APPS = [
     'daphne',
@@ -61,6 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'rest_framework',
     'rest_framework_simplejwt',
     'djoser',
@@ -123,10 +127,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
