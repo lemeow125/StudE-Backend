@@ -4,7 +4,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from .serializers import StudyGroupSerializer
 from .models import StudyGroup
-from courses.models import SubjectCourse
+from subjects.models import SubjectCourse
 # Create your views here.
 
 
