@@ -14,6 +14,9 @@ class StudyGroup(models.Model):
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 
 class StudyGroupMembership(models.Model):
     user = models.ForeignKey(
@@ -22,4 +25,4 @@ class StudyGroupMembership(models.Model):
         'study_groups.StudyGroup', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'StudyGroupMembership: User={self.user_id}, StudyGroup={self.study_group_id}'
+        return f'StudyGroupMembership: User={self.user}, StudyGroup={self.study_group.name}'

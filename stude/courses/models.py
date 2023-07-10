@@ -19,6 +19,9 @@ class SubjectCourse(models.Model):
     course = models.ForeignKey(
         'courses.Course', on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return (self.subject + ' under course ' + self.course)
+
 
 @receiver(post_migrate)
 def populate_courses(sender, **kwargs):

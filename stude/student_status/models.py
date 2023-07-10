@@ -16,3 +16,6 @@ class StudentStatus(models.Model):
     timestamp = models.DateField(auto_now_add=True)
     study_group = models.ManyToManyField(
         'study_groups.StudyGroup', through='study_groups.StudyGroupMembership', blank=True)
+
+    def __str__(self):
+        return self.user.full_name
