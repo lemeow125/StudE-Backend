@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "37bbd0140027c832ff7382532bd60c4def5a0a2a06d7fae418e89a7de6f109e1"
+            "sha256": "efd1134f98df71c3c1209f70d5d962b6609fe23b044b57f80bba89db477b549f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -268,6 +268,14 @@
             "index": "pypi",
             "version": "==4.2.3"
         },
+        "django-leaflet": {
+            "hashes": [
+                "sha256:2f6dc8c7187fd22e62b6f2b7b42eed86920f81bec312aa654981ebe5bc8e0866",
+                "sha256:ea35244539fe298156feafc7f1e2ce63067c8caa2ac6f8344069796b19d1ce9b"
+            ],
+            "index": "pypi",
+            "version": "==0.29.0"
+        },
         "django-templated-mail": {
             "hashes": [
                 "sha256:8db807effebb42a532622e2d142dfd453dafcd0d7794c4c3332acb90656315f9",
@@ -311,7 +319,7 @@
             "hashes": [
                 "sha256:f78861fb5115d5c2f8cf3c52a492ff548da9e1256dc84088947379f90e77e5b6"
             ],
-            "path": "E:/Downloads/GDAL-3.4.3-cp311-cp311-win_amd64.whl",
+            "path": "./packages/GDAL-3.4.3-cp311-cp311-win_amd64.whl",
             "version": "==3.4.3"
         },
         "hyperlink": {

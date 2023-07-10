@@ -9,5 +9,6 @@ urlpatterns = [
     path('semesters/', include('semesters.urls')),
     path('subjects/', include('subjects.urls')),
     path('study_groups/', include('study_groups.urls')),
-    path('messages/', include('studygroup_messages.urls'))
+    path('messages/', include('studygroup_messages.urls')),
+    path('landmarks/', include('landmarks.urls')),
 ]

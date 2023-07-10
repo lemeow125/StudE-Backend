@@ -87,6 +87,8 @@ INSTALLED_APPS = [
     'subjects',
     'study_groups',
     'studygroup_messages',
+    'leaflet',
+    'landmarks',
 ]
 
 MIDDLEWARE = [
@@ -225,3 +227,11 @@ SITE_NAME = 'Stud-E'
 JWT_TOKEN_LIFETIME = 10800
 ACCESS_TOKEN_LIFETIME = JWT_TOKEN_LIFETIME
 REFRESH_TOKEN_LIFETIME = 24 * JWT_TOKEN_LIFETIME
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (8.4803, 124.6498),
+    'DEFAULT_ZOOM': 24,
+    'MAX_ZOOM': 20,
+    'MIN_ZOOM': 3,
+    'SCALE': 'both'
+}
