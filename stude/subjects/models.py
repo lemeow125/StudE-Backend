@@ -12,17 +12,11 @@ class Subject(models.Model):
     students = models.ManyToManyField(
         'accounts.CustomUser', through='subjects.SubjectStudent', related_name='SubjectStudent_subject')
 
-    year_level = models.ForeignKey(
-        Year_Level,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='Year_Level_name'
-    )
-    semester = models.ForeignKey(
-        Semester,
-        on_delete=models.SET_NULL,
-        null=True
-    )
+    year_level = models.ManyToManyField(
+        'year_levels.Year_Level', through='subjects.SubjectYearLevel', related_name='SubjectYearLevel_subject')
+
+    semester = models.ManyToManyField(
+        'semesters.Semester', through='subjects.SubjectSemester', related_name='SubjectSemester_subject')
 
     def __str__(self):
         return self.name
@@ -35,7 +29,7 @@ class SubjectStudent(models.Model):
         'subjects.Subject', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'User: User={self.user_id}, Subject={self.subject_name}'
+        return f'User={self.user_id}, Subject={self.subject_name}'
 
 
 class SubjectCourse(models.Model):
@@ -44,4 +38,24 @@ class SubjectCourse(models.Model):
         'courses.Course', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return (self.subject + ' under course ' + self.course)
+        return f'Subject={self.subject.name}, Course={self.course.name}'
+
+
+class SubjectYearLevel(models.Model):
+    subject = models.ForeignKey(
+        'subjects.Subject', on_delete=models.CASCADE)
+    year_level = models.ForeignKey(
+        'year_levels.Year_Level', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Subject={self.subject.name}, Year Level={self.year_level.name}'
+
+
+class SubjectSemester(models.Model):
+    subject = models.ForeignKey(
+        'subjects.Subject', on_delete=models.CASCADE)
+    semester = models.ForeignKey(
+        'semesters.Semester', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Subject={self.subject.name}, Semester={self.semester.name}'
