@@ -22,14 +22,14 @@ def populate_courses(sender, **kwargs):
             name='Gymnasium',
             location=GEOSGeometry(
                 'POLYGON ((124.656383 8.485963, 124.656576 8.485483, 124.657009 8.485659, 124.656827 8.486126, 124.656383 8.485963))',
-                srid=4326
+                srid=SRID
             )
         )
         Landmark.objects.get_or_create(
             name='Arts & Culture Building',
             location=GEOSGeometry(
                 'POLYGON ((124.658427 8.486268, 124.658432 8.48617, 124.658582 8.486202, 124.658555 8.4863, 124.658427 8.486268))',
-                srid=4326
+                srid=SRID
             )
         )
         # Add more predefined records as needed
