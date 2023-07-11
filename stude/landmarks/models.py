@@ -15,7 +15,7 @@ class Landmark(models.Model):
 
 
 @receiver(post_migrate)
-def populate_courses(sender, **kwargs):
+def populate_landmarks(sender, **kwargs):
     if sender.name == 'landmarks':
         SRID = 4326
         Landmark.objects.get_or_create(
