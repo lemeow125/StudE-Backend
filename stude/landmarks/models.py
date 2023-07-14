@@ -8,7 +8,7 @@ from django.dispatch import receiver
 
 class Landmark(models.Model):
     name = models.CharField(max_length=64)
-    location = gis_models.PolygonField()
+    location = gis_models.PolygonField(srid=4326)
 
     def __str__(self):
         return self.name
@@ -178,7 +178,7 @@ def populate_landmarks(sender, **kwargs):
                 'POLYGON ((124.655534 8.485857, 124.655629 8.485588, 124.655795 8.485647, 124.655755 8.485757, 124.656271 8.485946, 124.656212 8.486104, 124.655534 8.485857))',
                 srid=SRID
             )
-        ) 
+        )
         Landmark.objects.get_or_create(
             name='Science Complex',
             location=GEOSGeometry(

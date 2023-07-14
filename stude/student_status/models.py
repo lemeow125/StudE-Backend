@@ -9,11 +9,13 @@ from django.contrib.gis.geos import Point
 class StudentStatus(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, primary_key=True)
-    location = gis_models.PointField(blank=True, null=True)
+    location = gis_models.PointField(blank=True, null=True, srid=4326)
     subject = models.ForeignKey(
         'subjects.Subject', on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)
+    landmark = models.ForeignKey(
+        'landmarks.Landmark', on_delete=models.SET_NULL, null=True)
     study_group = models.ManyToManyField(
         'study_groups.StudyGroup', through='study_groups.StudyGroupMembership', blank=True)
 

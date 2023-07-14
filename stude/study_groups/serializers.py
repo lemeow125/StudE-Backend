@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import StudyGroup, StudyGroupMembership
 from accounts.models import CustomUser
 from subjects.models import Subject
+from drf_extra_fields.geo_fields import PointField
 
 
 class StudyGroupSerializer(serializers.ModelSerializer):
@@ -9,6 +10,7 @@ class StudyGroupSerializer(serializers.ModelSerializer):
         queryset=CustomUser.objects.all(), many=True, slug_field='name', required=False, allow_null=True)
     subject = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
+    location = PointField()
 
     class Meta:
         model = StudyGroup

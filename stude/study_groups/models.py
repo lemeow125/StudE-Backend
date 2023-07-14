@@ -9,7 +9,7 @@ class StudyGroup(models.Model):
     name = models.CharField(max_length=48)
     users = models.ManyToManyField(
         'student_status.StudentStatus', through='StudyGroupMembership')
-    location = gis_models.PointField(blank=True, null=True)
+    location = gis_models.PointField(blank=True, null=True, srid=4326)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)
