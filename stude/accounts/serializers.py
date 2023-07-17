@@ -17,6 +17,9 @@ from django.contrib.gis.geos import Point
 class CustomUserSerializer(BaseUserSerializer):
     # user_status = StudentStatusSerializer(
     #    source='studentstatus', read_only=True)
+    course_shortname = serializers.SerializerMethodField()
+    yearlevel_shortname = serializers.SerializerMethodField()
+    semester_shortname = serializers.SerializerMethodField()
     course = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Course.objects.all(), required=False, allow_null=True)
     year_level = serializers.SlugRelatedField(
@@ -27,8 +30,17 @@ class CustomUserSerializer(BaseUserSerializer):
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
         fields = ('username', 'email',
-                  'student_id_number', 'year_level', 'semester', 'course', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned')
+                  'student_id_number', 'year_level', 'yearlevel_shortname', 'semester', 'semester_shortname', 'course', 'course_shortname', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned')
         read_only_fields = ('is_banned', 'user_status')
+
+    def get_course_shortname(self, instance):
+        return instance.course.shortname if instance.course else None
+
+    def get_yearlevel_shortname(self, instance):
+        return instance.year_level.shortname if instance.year_level else None
+
+    def get_semester_shortname(self, instance):
+        return instance.semester.shortname if instance.semester else None
 
 # The model from your custom user
 

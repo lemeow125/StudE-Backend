@@ -18,7 +18,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ('name', 'code', 'courses', 'year_levels', 'semesters')
+        fields = ('id', 'name', 'code', 'courses', 'year_levels', 'semesters')
 
     def get_year_level(self, obj):
         return obj.year_level.name
