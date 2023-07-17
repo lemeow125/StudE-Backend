@@ -31,7 +31,8 @@ class CustomUserSerializer(BaseUserSerializer):
         model = CustomUser
         fields = ('username', 'email',
                   'student_id_number', 'year_level', 'yearlevel_shortname', 'semester', 'semester_shortname', 'course', 'course_shortname', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned')
-        read_only_fields = ('is_banned', 'user_status')
+        read_only_fields = ('is_banned', 'user_status', 'yearlevel_shortname',
+                            'semester_shortname', 'course_shortname')
 
     def get_course_shortname(self, instance):
         return instance.course.shortname if instance.course else None
