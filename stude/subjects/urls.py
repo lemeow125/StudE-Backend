@@ -1,11 +1,9 @@
 from django.urls import include, path
 from .views import SubjectListView
-from .views import SubjectByYearSemesterView, SubjectByYearView
+from .views import SubjectByYearSemesterView
 
 urlpatterns = [
     path('', SubjectListView.as_view()),
-    path('<slug:year_slug>/',
-         SubjectByYearView.as_view()),
-    path('<slug:year_slug>/<slug:semester_slug>',
+    path('<slug:course_slug>/<slug:year_slug>/<slug:semester_slug>',
          SubjectByYearSemesterView.as_view()),
 ]

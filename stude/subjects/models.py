@@ -12,10 +12,10 @@ class Subject(models.Model):
     students = models.ManyToManyField(
         'accounts.CustomUser', through='subjects.SubjectStudent', related_name='SubjectStudent_subject')
 
-    year_level = models.ManyToManyField(
+    year_levels = models.ManyToManyField(
         'year_levels.Year_Level', through='subjects.SubjectYearLevel', related_name='SubjectYearLevel_subject')
 
-    semester = models.ManyToManyField(
+    semesters = models.ManyToManyField(
         'semesters.Semester', through='subjects.SubjectSemester', related_name='SubjectSemester_subject')
 
     def __str__(self):
