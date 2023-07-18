@@ -96,19 +96,18 @@ def populate_subjects(sender, **kwargs):
                     subject_code = row[1]
                     subject_name = row[2]
 
-                    # Skip ROTC/NSTP Subjects
-                    if ('NSTP' in subject_code or 'ROTC' in subject_code or 'CWTS' in subject_code or 'LTS' in subject_code):
-                        print('NSTP/ROTC subject', subject_name, 'omitted...')
+                    ignored_subject_codes = ['NSTP', 'ROTC', 'CWTS', 'LTS']
+                    ignored_subject_names = [
+                        'PRACTICUM', 'On the Job Training', 'CAPSTONE', 'Capstone']
+                    # Skip ignored subjects
+                    if any(ignored_code in subject_code for ignored_code in ignored_subject_codes):
+                        print('Ignored subject', subject_name,
+                              'with code', subject_code)
                         continue
 
-                    # Skip Practicum Subjects
-                    if ('PRACTICUM' in subject_name or 'On the Job Training' in subject_name):
-                        print('OJT subject', subject_name, 'omitted...')
-                        continue
-
-                    # Skip Capstone Subjects
-                    if ('CAPSTONE' in subject_name or 'Capstone' in subject_name):
-                        print('Capstone subject', subject_name, 'omitted...')
+                    if any(ignored_name in subject_name for ignored_name in ignored_subject_names):
+                        print('Ignored subject', subject_name,
+                              'with code', subject_code)
                         continue
 
                     course = Course.objects.filter(

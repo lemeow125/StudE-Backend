@@ -50,10 +50,10 @@ class CustomUserSerializer(BaseUserSerializer):
         # First, we'll remove all the existing subjects from the user
         print(validated_data)
         # If course, year_level, or semester is changed
-        if ('course' in validated_data or 'year_level' in validated_data or 'semester' in validated_data):
-            if (instance.course is not validated_data['course'] or
-                instance.year_level is not validated_data['year_level'] or
-                    instance.semester is not validated_data['semester']):
+        if any(field in validated_data for field in ['course', 'year_level', 'semester']):
+            if (instance.course != validated_data['course'] or
+                instance.year_level != validated_data['year_level'] or
+                    instance.semester != validated_data['semester']):
 
                 # Clear all subjects
                 instance.subjects.clear()
