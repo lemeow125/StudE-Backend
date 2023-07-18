@@ -84,7 +84,7 @@ def populate_subjects(sender, **kwargs):
 
                 reader = csv.reader(csvfile)
                 next(reader)  # Skip the header row
-
+                subject_count = 0
                 for row in reader:
                     if not any(row):
                         continue
@@ -97,15 +97,18 @@ def populate_subjects(sender, **kwargs):
                     subject_name = row[2]
 
                     # Skip ROTC/NSTP Subjects
-                    if (subject_code is 'NSTP102,ROTC/CWTS/LTS 2'):
+                    if ('NSTP' in subject_code or 'ROTC' in subject_code or 'CWTS' in subject_code or 'LTS' in subject_code):
+                        print('NSTP/ROTC subject', subject_name, 'omitted...')
                         continue
 
                     # Skip Practicum Subjects
-                    if ('PRACTICUM' in subject_name):
+                    if ('PRACTICUM' in subject_name or 'On the Job Training' in subject_name):
+                        print('OJT subject', subject_name, 'omitted...')
                         continue
 
                     # Skip Capstone Subjects
-                    if ('CAPSTONE' in subject_name):
+                    if ('CAPSTONE' in subject_name or 'Capstone' in subject_name):
+                        print('Capstone subject', subject_name, 'omitted...')
                         continue
 
                     course = Course.objects.filter(
@@ -124,3 +127,5 @@ def populate_subjects(sender, **kwargs):
                     SUBJECT[0].courses.set([course])
                     SUBJECT[0].year_levels.set([year_level])
                     SUBJECT[0].semesters.set([semester])
+                    subject_count += 1
+                print('Added', subject_count, 'subjects from', filename)

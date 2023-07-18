@@ -48,14 +48,23 @@ class CustomUserSerializer(BaseUserSerializer):
 
     def update(self, instance, validated_data):
         # First, we'll remove all the existing subjects from the user
-        instance.subjects.clear()
-        print('Clearing user subjects')
+        print(validated_data)
+        # If course, year_level, or semester is changed
+        if ('course' in validated_data or 'year_level' in validated_data or 'semester' in validated_data):
+            if (instance.course is not validated_data['course'] or
+                instance.year_level is not validated_data['year_level'] or
+                    instance.semester is not validated_data['semester']):
 
-        # Update the user instance with the validated data
-        instance = super().update(instance, validated_data)
-        print('Subjects:', instance.subjects)
-        # Next, we'll add new subjects based on the matching criteria
-        self.add_subjects(instance)
+                # Clear all subjects
+                instance.subjects.clear()
+                # Update the user instance with the validated data
+                instance = super().update(instance, validated_data)
+                # Then add new subjects matching the new criteria
+                self.add_subjects(instance)
+
+        # Else update as usual
+        else:
+            instance = super().update(instance, validated_data)
 
         return instance
 
@@ -64,7 +73,6 @@ class CustomUserSerializer(BaseUserSerializer):
         matching_subjects = Subject.objects.filter(
             courses=instance.course, year_levels=instance.year_level, semesters=instance.semester)
         # Add the matching subjects to the user's subjects list
-        print('Mathing subjects', matching_subjects)
         instance.subjects.add(*matching_subjects)
 
 # The model from your custom user
