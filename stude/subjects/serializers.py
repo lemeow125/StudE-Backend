@@ -3,9 +3,7 @@ from .models import Subject
 from courses.models import Course
 from year_levels.models import Year_Level
 from semesters.models import Semester
-from year_levels.serializers import YearLevelSerializer
-from semesters.serializers import SemesterSerializer
-from courses.serializers import CourseSerializer
+from accounts.models import CustomUser
 
 
 class SubjectSerializer(serializers.ModelSerializer):

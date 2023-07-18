@@ -53,8 +53,7 @@ class CustomUser(AbstractUser):
         on_delete=models.SET_NULL,
         null=True
     )
-    subjects = models.ManyToManyField(
-        'subjects.Subject', through='subjects.SubjectStudent', related_name='SubjectStudent_user')
+    subjects = models.ManyToManyField('subjects.Subject')
 
     @property
     def full_name(self):
@@ -78,3 +77,22 @@ def create_superuser(sender, **kwargs):
             # Activate the superuser
             superuser.is_active = True
             superuser.save()
+
+        User = CustomUser
+        username = 'keannu125'
+        email = os.getenv('DJANGO_ADMIN_EMAIL')
+        password = os.getenv('DJANGO_ADMIN_PASSWORD')
+        first_name = 'Keannu'
+        last_name = 'Bernasol'
+        # course = 'Bachelor of Science in Information Technology'
+        # year_level = '1st Year'
+        # semester = '1st Semester'
+
+        if not CustomUser.objects.filter(username=username).exists():
+            # Create the superuser with is_active set to False
+            user = CustomUser.objects.create(
+                username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+
+            # Activate the superuser
+            user.is_active = True
+            user.save()

@@ -5,6 +5,7 @@ from .models import CustomUser
 from year_levels.models import Year_Level
 from semesters.models import Semester
 from courses.models import Course
+from subjects.models import Subject
 
 
 class CustomUserForm(forms.ModelForm):
@@ -14,6 +15,8 @@ class CustomUserForm(forms.ModelForm):
         queryset=Semester.objects.all(), required=False)
     course = forms.ModelChoiceField(
         queryset=Course.objects.all(), required=False)
+    subjects = forms.ModelMultipleChoiceField(
+        queryset=Subject.objects.all(), required=False)
     avatar = forms.ImageField(required=False)
 
     class Meta:
@@ -27,7 +30,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': ('student_id_number',
-         'year_level', 'semester', 'course', 'avatar', 'is_student', 'is_banned')}),
+         'year_level', 'semester', 'course', 'subjects', 'avatar', 'is_student', 'is_banned')}),
     )
 
 

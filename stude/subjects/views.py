@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from .models import Subject
 from .serializers import SubjectSerializer
 from rest_framework.views import APIView

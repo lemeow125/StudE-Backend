@@ -9,8 +9,7 @@ class Subject(models.Model):
     code = models.CharField(max_length=16)
     courses = models.ManyToManyField(
         'courses.Course', through='subjects.SubjectCourse', related_name='SubjectCourse_subject')
-    students = models.ManyToManyField(
-        'accounts.CustomUser', through='subjects.SubjectStudent', related_name='SubjectStudent_subject')
+    students = models.ManyToManyField('accounts.CustomUser', blank=True)
 
     year_levels = models.ManyToManyField(
         'year_levels.Year_Level', through='subjects.SubjectYearLevel', related_name='SubjectYearLevel_subject')
@@ -20,16 +19,6 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class SubjectStudent(models.Model):
-    user = models.ForeignKey(
-        'accounts.CustomUser', on_delete=models.CASCADE)
-    subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'User={self.user.full_name}, Subject={self.subject.name}'
 
 
 class SubjectCourse(models.Model):
