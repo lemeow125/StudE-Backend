@@ -83,6 +83,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     student_id_number = serializers.CharField(required=True)
     password = serializers.CharField(
         write_only=True, style={'input_type': 'password', 'placeholder': 'Password'})
+    subjects = serializers.SlugRelatedField(
+        many=True, slug_field='name', queryset=Subject.objects.all(), required=False, allow_null=True)
 
     class Meta:
         model = CustomUser    # Use your custom user model here
