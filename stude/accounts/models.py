@@ -88,9 +88,9 @@ def create_superuser(sender, **kwargs):
         # year_level = '1st Year'
         # semester = '1st Semester'
 
-        if not CustomUser.objects.filter(username=username).exists():
+        if not User.objects.filter(username=username).exists():
             # Create the superuser with is_active set to False
-            user = CustomUser.objects.create(
+            user = User.objects.create_user(
                 username=username, email=email, password=password, first_name=first_name, last_name=last_name)
 
             # Activate the superuser

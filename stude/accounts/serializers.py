@@ -11,6 +11,7 @@ from django.contrib.auth.password_validation import validate_password
 from courses.models import Course
 from year_levels.models import Year_Level
 from semesters.models import Semester
+from subjects.models import Subject
 from django.contrib.gis.geos import Point
 
 
@@ -26,6 +27,8 @@ class CustomUserSerializer(BaseUserSerializer):
         many=False, slug_field='name', queryset=Year_Level.objects.all(), required=False, allow_null=True)
     semester = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Semester.objects.all(), required=False, allow_null=True)
+    subjects = serializers.SlugRelatedField(
+        many=True, slug_field='name', queryset=Subject.objects.all(), required=False, allow_null=True)
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
