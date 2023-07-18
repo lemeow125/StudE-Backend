@@ -29,7 +29,7 @@ class SubjectStudent(models.Model):
         'subjects.Subject', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'User={self.user_id}, Subject={self.subject_name}'
+        return f'User={self.user.full_name}, Subject={self.subject.name}'
 
 
 class SubjectCourse(models.Model):
