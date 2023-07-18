@@ -46,6 +46,27 @@ class CustomUserSerializer(BaseUserSerializer):
     def get_semester_shortname(self, instance):
         return instance.semester.shortname if instance.semester else None
 
+    def update(self, instance, validated_data):
+        # First, we'll remove all the existing subjects from the user
+        instance.subjects.clear()
+        print('Clearing user subjects')
+
+        # Update the user instance with the validated data
+        instance = super().update(instance, validated_data)
+        print('Subjects:', instance.subjects)
+        # Next, we'll add new subjects based on the matching criteria
+        self.add_subjects(instance)
+
+        return instance
+
+    def add_subjects(self, instance):
+        # Get the matching subjects based on the user's course, year level, and semester
+        matching_subjects = Subject.objects.filter(
+            courses=instance.course, year_levels=instance.year_level, semesters=instance.semester)
+        # Add the matching subjects to the user's subjects list
+        print('Mathing subjects', matching_subjects)
+        instance.subjects.add(*matching_subjects)
+
 # The model from your custom user
 
 

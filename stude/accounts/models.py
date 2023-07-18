@@ -82,6 +82,7 @@ def create_superuser(sender, **kwargs):
         username = 'keannu125'
         email = os.getenv('DJANGO_ADMIN_EMAIL')
         password = os.getenv('DJANGO_ADMIN_PASSWORD')
+        student_id_number = '2020300490'
         first_name = 'Keannu'
         last_name = 'Bernasol'
         # course = 'Bachelor of Science in Information Technology'
@@ -91,7 +92,7 @@ def create_superuser(sender, **kwargs):
         if not User.objects.filter(username=username).exists():
             # Create the superuser with is_active set to False
             user = User.objects.create_user(
-                username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+                username=username, email=email, password=password, first_name=first_name, last_name=last_name, student_id_number=student_id_number)
 
             # Activate the superuser
             user.is_active = True

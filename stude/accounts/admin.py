@@ -16,7 +16,7 @@ class CustomUserForm(forms.ModelForm):
     course = forms.ModelChoiceField(
         queryset=Course.objects.all(), required=False)
     subjects = forms.ModelMultipleChoiceField(
-        queryset=Subject.objects.all(), required=False)
+        queryset=Subject.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
     avatar = forms.ImageField(required=False)
 
     class Meta:
