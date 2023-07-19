@@ -18,10 +18,4 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = ('id', 'name', 'code', 'courses', 'year_levels', 'semesters')
-
-    def get_year_level(self, obj):
-        return obj.year_level.name
-
-    def get_semester(self, obj):
-        return obj.semester.name
+        fields = ('id', 'name', 'codes', 'courses', 'year_levels', 'semesters')

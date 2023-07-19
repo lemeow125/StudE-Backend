@@ -94,6 +94,7 @@ def populate_subjects(sender, **kwargs):
                 reader = csv.reader(csvfile)
                 next(reader)  # Skip the header row
                 subject_count = 0
+                updated_subjects = 0
                 for row in reader:
                     if not any(row):
                         continue
@@ -127,8 +128,6 @@ def populate_subjects(sender, **kwargs):
                         name=subject_semester).first()
                     # Create the subject instance or get if it already exists
                     if (Subject.objects.filter(name=subject_name).exists()):
-                        print('Updating existing subject',
-                              subject_name, subject_code)
                         SUBJECT = Subject.objects.filter(name=subject_name
                                                          ).first()
                         SUBJECT.courses.add(course)
@@ -137,6 +136,7 @@ def populate_subjects(sender, **kwargs):
                         SUBJECT_CODE = SubjectCode.objects.get_or_create(
                             code=subject_code)
                         SUBJECT.codes.add(SUBJECT_CODE[0])
+                        updated_subjects += 1
                     else:
 
                         SUBJECT = Subject.objects.get_or_create(
@@ -151,4 +151,5 @@ def populate_subjects(sender, **kwargs):
                         subject_count += 1
 
                     # Set the course, year level, and semester of the subject
-                print('Added', subject_count, 'subjects from', filename)
+                print('Added', subject_count, 'subjects from', filename,)
+                print('Updated', updated_subjects, 'subjects from', filename)
