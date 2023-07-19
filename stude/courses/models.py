@@ -5,19 +5,13 @@ from django.db import models
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=64)
-    shortname = models.CharField(max_length=16)
+    name = models.CharField(max_length=64, unique=True)
+    shortname = models.CharField(max_length=16, unique=True)
     subjects = models.ManyToManyField(
-        'subjects.Subject', related_name='SubjectCourse_course', through='courses.SubjectCourse')
+        'subjects.Subject', related_name='SubjectCourse_course', through='subjects.SubjectCourse')
 
     def __str__(self):
         return self.name
-
-
-class SubjectCourse(models.Model):
-    subject = models.ForeignKey('subjects.Subject', on_delete=models.CASCADE)
-    course = models.ForeignKey(
-        'courses.Course', on_delete=models.CASCADE, null=True)
 
 
 @receiver(post_migrate)

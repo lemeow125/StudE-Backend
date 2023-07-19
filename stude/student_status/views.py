@@ -19,4 +19,4 @@ class ActiveStudentStatusListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return StudentStatus.objects.filter(active=True).exclude(user=user)
+        return StudentStatus.objects.filter(active=True)

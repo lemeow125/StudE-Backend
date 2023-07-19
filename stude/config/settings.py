@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv  # Python dotenv
 import os
 
+
 load_dotenv()  # loads the configs from .env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -50,8 +51,21 @@ else:
     EMAIL_PORT = str(os.getenv('PROD_EMAIL_PORT'))
     EMAIL_USE_TLS = str(os.getenv('PROD_EMAIL_TLS'))
 
+# Will need to install OSGeo4W for this!
+if os.name == 'nt':
+    OSGEO4W = r"C:\OSGeo4W"
+    if not os.path.isdir(OSGEO4W):
+        OSGEO4W += '64'
+    os.environ['OSGEO4W_ROOT'] = OSGEO4W
+    os.environ['GDAL_DATA'] = "C:\Program Files\GDAL\gdal-data"
+    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+    GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal204'
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
-# Application definition
+GEOS_LIBRARY_PATH = str(os.environ.get('VIRTUAL_ENV') +
+                        r"\Lib\site-packages\osgeo\geos_c.dll")
+GDAL_LIBRARY_PATH = str(os.environ.get('VIRTUAL_ENV') +
+                        r"\Lib\site-packages\osgeo\gdal304.dll")
 
 INSTALLED_APPS = [
     'daphne',
@@ -61,6 +75,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'rest_framework',
     'rest_framework_simplejwt',
     'djoser',
@@ -72,6 +87,8 @@ INSTALLED_APPS = [
     'subjects',
     'study_groups',
     'studygroup_messages',
+    'leaflet',
+    'landmarks',
 ]
 
 MIDDLEWARE = [
@@ -123,10 +140,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -203,3 +227,11 @@ SITE_NAME = 'Stud-E'
 JWT_TOKEN_LIFETIME = 10800
 ACCESS_TOKEN_LIFETIME = JWT_TOKEN_LIFETIME
 REFRESH_TOKEN_LIFETIME = 24 * JWT_TOKEN_LIFETIME
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (8.48567, 124.65642),
+    'DEFAULT_ZOOM': 19,
+    'MAX_ZOOM': 20,
+    'MIN_ZOOM': 3,
+    'SCALE': 'both'
+}

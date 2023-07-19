@@ -11,6 +11,11 @@ djoser = "*"
 pillow = "*"
 whitenoise = "*"
 djangochannelsrestframework = "*"
+daphne = "*"
+psycopg2 = "*"
+gdal = {path = "./packages/GDAL-3.4.3-cp311-cp311-win_amd64.whl"}
+django-leaflet = "*"
+django-extra-fields = "*"
 
 [dev-packages]
 

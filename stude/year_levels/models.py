@@ -6,8 +6,8 @@ from django.dispatch import receiver
 
 
 class Year_Level(models.Model):
-    name = models.CharField(max_length=64)
-    shortname = models.CharField(max_length=16)
+    name = models.CharField(max_length=64, unique=True)
+    shortname = models.CharField(max_length=16, unique=True)
 
     def __str__(self):
         return self.name

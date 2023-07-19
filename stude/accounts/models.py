@@ -20,11 +20,9 @@ def validate_student_id(value):
 class CustomUser(AbstractUser):
     def _get_upload_to(instance, filename):
         base_filename, file_extension = os.path.splitext(filename)
-        # Convert filename to a slug format
-        cleaned_filename = slugify(base_filename)
         # Get the student ID number
         student_id = str(instance.student_id_number)
-        new_filename = f"{student_id}_{cleaned_filename}{file_extension}"
+        new_filename = f"{student_id}_{file_extension}"
         return os.path.join('avatars', new_filename)
 
     first_name = models.CharField(max_length=100)
@@ -55,8 +53,7 @@ class CustomUser(AbstractUser):
         on_delete=models.SET_NULL,
         null=True
     )
-    subjects = models.ManyToManyField(
-        'subjects.Subject', through='subjects.SubjectStudent', related_name='SubjectStudent_user')
+    subjects = models.ManyToManyField('subjects.Subject')
 
     @property
     def full_name(self):
@@ -80,3 +77,23 @@ def create_superuser(sender, **kwargs):
             # Activate the superuser
             superuser.is_active = True
             superuser.save()
+
+        User = CustomUser
+        username = 'keannu125'
+        email = os.getenv('DJANGO_ADMIN_EMAIL')
+        password = os.getenv('DJANGO_ADMIN_PASSWORD')
+        student_id_number = '2020300490'
+        first_name = 'Keannu'
+        last_name = 'Bernasol'
+        # course = 'Bachelor of Science in Information Technology'
+        # year_level = '1st Year'
+        # semester = '1st Semester'
+
+        if not User.objects.filter(username=username).exists():
+            # Create the superuser with is_active set to False
+            user = User.objects.create_user(
+                username=username, email=email, password=password, first_name=first_name, last_name=last_name, student_id_number=student_id_number)
+
+            # Activate the superuser
+            user.is_active = True
+            user.save()
