@@ -130,6 +130,9 @@ def populate_subjects(sender, **kwargs):
                     if (Subject.objects.filter(name=subject_name).exists()):
                         SUBJECT = Subject.objects.filter(name=subject_name
                                                          ).first()
+                        if (Subject.objects.filter(name=subject_name, year_levels=year_level, semesters=semester).exists()):
+                            # print('Duplicate subject')
+                            continue
                         SUBJECT.courses.add(course)
                         SUBJECT.year_levels.add(year_level)
                         SUBJECT.semesters.add(semester)
