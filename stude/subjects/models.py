@@ -96,6 +96,7 @@ def populate_subjects(sender, **kwargs):
                 subject_count = 0
                 updated_subjects = 0
                 ignored_subjects = 0
+                existing_subjects = 0
                 for row in reader:
                     if not any(row):
                         continue
@@ -132,6 +133,7 @@ def populate_subjects(sender, **kwargs):
                     # If subject already exists with relevant info, skip over it
                     if (Subject.objects.filter(name=subject_name, year_levels=year_level, semesters=semester).exists()):
                         # print('Duplicate subject')
+                        existing_subjects += 1
                         continue
 
                     # Else if subject exists without relevant info, add relevant info
@@ -162,7 +164,9 @@ def populate_subjects(sender, **kwargs):
                         subject_count += 1
 
                     # Set the course, year level, and semester of the subject
-                print('Added', subject_count, 'subjects from', filename,)
-                print('Updated', updated_subjects, 'subjects from', filename)
+                print('Skipped', existing_subjects,
+                      'already existing subjects')
+                print('Added', subject_count, 'subjects')
+                print('Updated', updated_subjects, 'subjects')
                 print('Ignored', ignored_subjects,
-                      'subjects from', filename, '\n')
+                      'subjects', '\n')
