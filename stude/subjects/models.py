@@ -13,7 +13,8 @@ from semesters.models import Semester
 
 class Subject(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    code = models.CharField(max_length=16, unique=True)
+    codes = models.ManyToManyField(
+        'subjects.SubjectCode')
     courses = models.ManyToManyField(
         'courses.Course', through='subjects.SubjectCourse', related_name='SubjectCourse_subject')
     students = models.ManyToManyField(
@@ -26,7 +27,15 @@ class Subject(models.Model):
         'semesters.Semester', through='subjects.SubjectSemester', related_name='SubjectSemester_subject')
 
     def __str__(self):
-        return self.name
+        code_list = ', '.join(self.codes.values_list('code', flat=True))
+        return f'{self.name} ({code_list})'
+
+
+class SubjectCode(models.Model):
+    code = models.CharField(max_length=16, unique=True)
+
+    def __str__(self):
+        return self.code
 
 
 class SubjectCourse(models.Model):
@@ -117,14 +126,29 @@ def populate_subjects(sender, **kwargs):
                     semester = Semester.objects.filter(
                         name=subject_semester).first()
                     # Create the subject instance or get if it already exists
-                    SUBJECT = Subject.objects.get_or_create(
-                        name=subject_name,
-                        code=subject_code,
+                    if (Subject.objects.filter(name=subject_name).exists()):
+                        print('Updating existing subject',
+                              subject_name, subject_code)
+                        SUBJECT = Subject.objects.filter(name=subject_name
+                                                         ).first()
+                        SUBJECT.courses.add(course)
+                        SUBJECT.year_levels.add(year_level)
+                        SUBJECT.semesters.add(semester)
+                        SUBJECT_CODE = SubjectCode.objects.get_or_create(
+                            code=subject_code)
+                        SUBJECT.codes.add(SUBJECT_CODE[0])
+                    else:
 
-                    )
+                        SUBJECT = Subject.objects.get_or_create(
+                            name=subject_name,
+                        )
+                        SUBJECT[0].courses.set([course])
+                        SUBJECT[0].year_levels.set([year_level])
+                        SUBJECT[0].semesters.set([semester])
+                        SUBJECT_CODE = SubjectCode.objects.get_or_create(
+                            code=subject_code)
+                        SUBJECT[0].codes.add(SUBJECT_CODE[0])
+                        subject_count += 1
+
                     # Set the course, year level, and semester of the subject
-                    SUBJECT[0].courses.set([course])
-                    SUBJECT[0].year_levels.set([year_level])
-                    SUBJECT[0].semesters.set([semester])
-                    subject_count += 1
                 print('Added', subject_count, 'subjects from', filename)
