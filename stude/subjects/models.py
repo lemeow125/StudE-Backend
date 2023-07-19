@@ -95,6 +95,7 @@ def populate_subjects(sender, **kwargs):
                 next(reader)  # Skip the header row
                 subject_count = 0
                 updated_subjects = 0
+                ignored_subjects = 0
                 for row in reader:
                     if not any(row):
                         continue
@@ -106,33 +107,38 @@ def populate_subjects(sender, **kwargs):
                     subject_code = row[1]
                     subject_name = row[2]
 
+                    # Definitions of subjects to ignore
                     ignored_subject_codes = ['NSTP', 'ROTC', 'CWTS', 'LTS']
                     ignored_subject_names = [
                         'PRACTICUM', 'On the Job Training', 'CAPSTONE', 'Capstone']
+
                     # Skip ignored subjects
                     if any(ignored_code in subject_code for ignored_code in ignored_subject_codes):
-                        print('Ignored subject', subject_name,
-                              'with code', subject_code)
+                        ignored_subjects += 1
                         continue
 
                     if any(ignored_name in subject_name for ignored_name in ignored_subject_names):
-                        print('Ignored subject', subject_name,
-                              'with code', subject_code)
+                        ignored_subjects += 1
                         continue
 
+                    # Get relevant info for specific subject
                     course = Course.objects.filter(
                         name=filename).first()
                     year_level = Year_Level.objects.filter(
                         name=subject_year_level).first()
                     semester = Semester.objects.filter(
                         name=subject_semester).first()
-                    # Create the subject instance or get if it already exists
+
+                    # If subject already exists with relevant info, skip over it
+                    if (Subject.objects.filter(name=subject_name, year_levels=year_level, semesters=semester).exists()):
+                        # print('Duplicate subject')
+                        continue
+
+                    # Else if subject exists without relevant info, add relevant info
                     if (Subject.objects.filter(name=subject_name).exists()):
                         SUBJECT = Subject.objects.filter(name=subject_name
                                                          ).first()
-                        if (Subject.objects.filter(name=subject_name, year_levels=year_level, semesters=semester).exists()):
-                            # print('Duplicate subject')
-                            continue
+
                         SUBJECT.courses.add(course)
                         SUBJECT.year_levels.add(year_level)
                         SUBJECT.semesters.add(semester)
@@ -140,6 +146,8 @@ def populate_subjects(sender, **kwargs):
                             code=subject_code)
                         SUBJECT.codes.add(SUBJECT_CODE[0])
                         updated_subjects += 1
+
+                    # If subject does not exist at all, then create new subject
                     else:
 
                         SUBJECT = Subject.objects.get_or_create(
@@ -156,3 +164,5 @@ def populate_subjects(sender, **kwargs):
                     # Set the course, year level, and semester of the subject
                 print('Added', subject_count, 'subjects from', filename,)
                 print('Updated', updated_subjects, 'subjects from', filename)
+                print('Ignored', ignored_subjects,
+                      'subjects from', filename, '\n')
