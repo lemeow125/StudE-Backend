@@ -88,7 +88,7 @@ def populate_subjects(sender, **kwargs):
             csv_file_path = os.path.join(root_path, csv_file)
             # Filename contains course of subjects
             filename = os.path.splitext(csv_file)[0]
-            print('Reading subjects from', filename)
+            print('---', 'Adding Subjects from', filename, '---')
             with open(csv_file_path, newline='') as csvfile:
 
                 reader = csv.reader(csvfile)

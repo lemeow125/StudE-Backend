@@ -41,7 +41,7 @@ def populate_subjects(sender, **kwargs):
         csv_files = [f for f in os.listdir(root_path) if f.endswith('.csv')]
         added_courses = 0
         existing_courses = 0
-        print('Adding courses\n')
+        print('--- Adding Courses ---')
         for csv_file in csv_files:
             # The filename contains coursename
             filename = os.path.splitext(csv_file)[0]
@@ -65,4 +65,4 @@ def populate_subjects(sender, **kwargs):
                     added_courses += 1
 
         print('Added', added_courses, 'courses')
-        print(existing_courses, 'existing courses skipped\n')
+        print('Skipped', existing_courses, 'already existing courses\n')
