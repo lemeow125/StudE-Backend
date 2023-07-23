@@ -63,6 +63,9 @@ def populate_subjects(sender, **kwargs):
                     Course.objects.get_or_create(
                         name=filename, shortname=shortname)
                     added_courses += 1
+                    continue
+            else:
+                print('Warn: Improperly formatted course record:', filename)
 
         print('Added', added_courses, 'courses')
         print('Skipped', existing_courses, 'already existing courses\n')
