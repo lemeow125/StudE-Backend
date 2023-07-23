@@ -29,6 +29,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+FRONTEND_DEBUG = True
 
 ALLOWED_HOSTS = ['*', '127.0.0.1', 'localhost', '10.0.10.32', '10.0.10.8']
 
@@ -216,7 +217,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DOMAIN = ''
-if (DEBUG):
+if (FRONTEND_DEBUG):
     DOMAIN = 'exp'
 else:
     DOMAIN = 'stude'
