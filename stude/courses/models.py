@@ -54,7 +54,6 @@ def populate_subjects(sender, **kwargs):
             if shortname != None:
                 # If course already exists with relevant info, skip over it
                 if (Course.objects.filter(name=filename, shortname=shortname).exists()):
-
                     existing_courses += 1
                     continue
 
