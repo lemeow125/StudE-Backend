@@ -33,7 +33,7 @@ def populate_courses(sender, **kwargs):
 '''
 
 
-# Create subjects based on records that we have
+# Create courses based on records that we have
 @receiver(post_migrate)
 def populate_subjects(sender, **kwargs):
     if sender.name == 'courses':
