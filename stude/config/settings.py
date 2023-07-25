@@ -29,9 +29,19 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-FRONTEND_DEBUG = True
+FRONTEND_DEBUG = False
 
-ALLOWED_HOSTS = ['*', '127.0.0.1', 'localhost', '10.0.10.32', '10.0.10.8']
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ["https://stude.keannu1.duckdns.org"]
+
+# DRF-Spectacular
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'StudE API',
+    'DESCRIPTION': 'A Capstone project',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
 
 # Email credentials
 EMAIL_HOST = ''
@@ -76,7 +86,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'drf_yasg',
+    'drf_spectacular',
     'django.contrib.gis',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -133,7 +143,8 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 WSGI_APPLICATION = 'config.wsgi.application'
