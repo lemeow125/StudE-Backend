@@ -10,6 +10,21 @@ class SubjectListView(generics.ListAPIView):
     queryset = Subject.objects.all()
 
 
+class SubjectByCourseView(generics.ListAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+    def get(self, request, course_slug):
+        # Retrieve the subjects based on year level and semester slugs
+        subjects = Subject.objects.filter(
+            courses__shortname=course_slug).order_by('-subjectyearlevel')
+
+        # Serialize the subjects
+        serializer = SubjectSerializer(subjects, many=True)
+
+        return Response(serializer.data)
+
+
 class SubjectByCourseYearSemesterView(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
