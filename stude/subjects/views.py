@@ -17,7 +17,7 @@ class SubjectByCourseView(generics.ListAPIView):
     def get(self, request, course_slug):
         # Retrieve the subjects based on year level and semester slugs
         subjects = Subject.objects.filter(
-            courses__shortname=course_slug).order_by('-subjectyearlevel')
+            courses__shortname=course_slug).distinct()
 
         # Serialize the subjects
         serializer = SubjectSerializer(subjects, many=True)
@@ -32,7 +32,7 @@ class SubjectByCourseYearSemesterView(generics.ListAPIView):
     def get(self, request, course_slug, year_slug, semester_slug):
         # Retrieve the subjects based on year level and semester slugs
         subjects = Subject.objects.filter(
-            courses__shortname=course_slug, year_levels__shortname=year_slug, semesters__shortname=semester_slug)
+            courses__shortname=course_slug, year_levels__shortname=year_slug, semesters__shortname=semester_slug).distinct()
 
         # Serialize the subjects
         serializer = SubjectSerializer(subjects, many=True)
