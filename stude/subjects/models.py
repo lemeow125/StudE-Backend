@@ -12,26 +12,10 @@ from semesters.models import Semester
 
 
 class Subject(models.Model):
-    name = models.CharField(max_length=64, unique=True)
-
-    def __str__(self):
-        return f'{self.name}'
-
-
-class SubjectCode(models.Model):
-    code = models.CharField(max_length=16, unique=True)
-
-    def __str__(self):
-        return self.code
-
-
-class SubjectInstance(models.Model):
-    subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE)
+    name = models.CharField(max_length=64)
     students = models.ManyToManyField(
         CustomUser, blank=True)
-    code = models.ForeignKey(
-        SubjectCode, on_delete=models.CASCADE)
+    code = models.CharField(max_length=16)
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE)
     year_level = models.ForeignKey(
@@ -39,10 +23,11 @@ class SubjectInstance(models.Model):
     semester = models.ForeignKey(
         Semester, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ['name', 'course', 'year_level', 'semester']
+
     def __str__(self):
         return f'Subject: {self.name}({self.code}) - {self.course.shortname} - {self.year_level} - {self.semester}'
-
-
 # Create subjects on initial migrate
 
 
@@ -62,7 +47,6 @@ def populate_subjects(sender, **kwargs):
                 reader = csv.reader(csvfile)
                 next(reader)  # Skip the header row
                 subject_count = 0
-                updated_subjects = 0
                 ignored_subjects = 0
                 existing_subjects = 0
                 for row in reader:
@@ -98,41 +82,22 @@ def populate_subjects(sender, **kwargs):
                     semester = Semester.objects.filter(
                         name=subject_semester).first()
 
-                    # If Subject exists
-                    if (Subject.objects.filter(name=subject_name).exists()):
-
-                        # If subject instance exists, skip over
-                        if (SubjectInstance.objects.filter(subject__name=subject_name, year_level=year_level, semester=semester).exists()):
-                            # print('Duplicate subject')
-                            existing_subjects += 1
-                            continue
-
-                        # If no subject instance exists, create one
-                        else:
-                            SUBJECT = Subject.objects.filter(
-                                name=subject_name).first()
-                            SUBJECT_CODE, created = SubjectCode.objects.get_or_create(
-                                code=subject_code)
-                            SUBJECT_INSTANCE = SubjectInstance.objects.get_or_create(
-                                subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=SUBJECT_CODE)
-                            updated_subjects += 1
+                    # If subject exists, skip over
+                    if (Subject.objects.filter(name=subject_name, course=course, year_level=year_level, semester=semester, code=subject_code).exists()):
+                        # print('Duplicate subject')
+                        existing_subjects += 1
+                        continue
 
                     # If subject does not exist at all, then create new subject
                     else:
 
                         SUBJECT, created = Subject.objects.get_or_create(
-                            name=subject_name,
-                        )
-                        SUBJECT_CODE, created = SubjectCode.objects.get_or_create(
-                            code=subject_code)
-                        SUBJECT_INSTANCE = SubjectInstance.objects.get_or_create(
-                            subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=SUBJECT_CODE)
+                            name=subject_name, course=course, year_level=year_level, semester=semester, code=subject_code)
                         subject_count += 1
 
                     # Set the course, year level, and semester of the subject
                 print('Skipped', existing_subjects,
                       'already existing subjects')
                 print('Added', subject_count, 'subjects')
-                print('Updated', updated_subjects, 'subjects')
                 print('Ignored', ignored_subjects,
                       'subjects', '\n')

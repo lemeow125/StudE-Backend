@@ -4,7 +4,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from .serializers import StudyGroupSerializer
 from .models import StudyGroup
-from subjects.models import SubjectInstance
+from subjects.models import Subject
 # Create your views here.
 
 
@@ -26,7 +26,7 @@ class StudyGroupListView(generics.ListAPIView):
         print(user_course)
 
         # Get subject names related to the user's course
-        subject_names = SubjectInstance.objects.filter(
+        subject_names = Subject.objects.filter(
             course=user_course
         ).values_list('subject', flat=True)
 

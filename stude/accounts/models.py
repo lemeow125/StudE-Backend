@@ -34,7 +34,7 @@ class CustomUser(AbstractUser):
     is_active = models.BooleanField(default=False)
     is_student = models.BooleanField(default=True)
     is_studying = models.BooleanField(default=False)
-    is_banned = models.BooleanField(default=False)
+    irregular = models.BooleanField(default=False)
     student_id_number = models.CharField(
         max_length=16, validators=[validate_student_id], null=False)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
@@ -53,7 +53,7 @@ class CustomUser(AbstractUser):
         on_delete=models.SET_NULL,
         null=True
     )
-    subjects = models.ManyToManyField('subjects.SubjectInstance')
+    subjects = models.ManyToManyField('subjects.Subject')
 
     @property
     def full_name(self):

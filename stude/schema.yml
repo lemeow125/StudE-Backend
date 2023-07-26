@@ -744,6 +744,28 @@ paths:
       - api
       security:
       - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subject'
+          description: ''
+  /api/v1/subjects/{course_slug}:
+    get:
+      operationId: api_v1_subjects_list_2
+      parameters:
+      - in: path
+        name: course_slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -756,7 +778,7 @@ paths:
           description: ''
   /api/v1/subjects/{course_slug}/{year_slug}/{semester_slug}:
     get:
-      operationId: api_v1_subjects_list_2
+      operationId: api_v1_subjects_list_3
       parameters:
       - in: path
         name: course_slug
@@ -773,6 +795,23 @@ paths:
         schema:
           type: string
         required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subject'
+          description: ''
+  /api/v1/subjects/all:
+    get:
+      operationId: api_v1_subjects_all_list
       tags:
       - api
       security:
@@ -828,16 +867,10 @@ components:
         shortname:
           type: string
           maxLength: 16
-        subjects:
-          type: array
-          items:
-            type: string
-          readOnly: true
       required:
       - id
       - name
       - shortname
-      - subjects
     CustomUser:
       type: object
       properties:
@@ -888,13 +921,13 @@ components:
         last_name:
           type: string
           maxLength: 100
-        is_banned:
+        irregular:
           type: boolean
           readOnly: true
       required:
       - course_shortname
       - first_name
-      - is_banned
+      - irregular
       - last_name
       - semester_shortname
       - student_id_number
@@ -1001,7 +1034,7 @@ components:
         last_name:
           type: string
           maxLength: 100
-        is_banned:
+        irregular:
           type: boolean
           readOnly: true
     PatchedStudentStatus:
@@ -1146,35 +1179,27 @@ components:
         id:
           type: integer
           readOnly: true
-        name:
+        subject:
           type: string
-          maxLength: 64
-        codes:
-          type: array
-          items:
-            type: string
-        courses:
-          type: array
-          items:
-            type: string
-            nullable: true
-        year_levels:
-          type: array
-          items:
-            type: string
-            nullable: true
-        semesters:
-          type: array
-          items:
-            type: string
-            nullable: true
+        code:
+          type: string
+          maxLength: 16
+        course:
+          type: string
+          nullable: true
+        year_level:
+          type: string
+          nullable: true
+        semester:
+          type: string
+          nullable: true
       required:
-      - codes
-      - courses
+      - code
+      - course
       - id
-      - name
-      - semesters
-      - year_levels
+      - semester
+      - subject
+      - year_level
     TokenObtainPair:
       type: object
       properties:

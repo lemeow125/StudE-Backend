@@ -13,10 +13,9 @@ whitenoise = "*"
 djangochannelsrestframework = "*"
 daphne = "*"
 psycopg2 = "*"
-gdal = "*"
 django-leaflet = "*"
 django-extra-fields = "*"
-drf-spectacular = "*"
+drf-spectacular = {extras = ["sidecar"], version = "*"}
 
 [dev-packages]
 

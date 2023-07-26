@@ -13,11 +13,25 @@ from year_levels.models import Year_Level
 from semesters.models import Semester
 from subjects.models import Subject
 from django.contrib.gis.geos import Point
+from django.utils.encoding import smart_str
+
+# There can be multiple subject instances with the same name, only differing in course, year level, and semester. We filter them here
+
+
+class SubjectSlugRelatedField(serializers.SlugRelatedField):
+    def to_internal_value(self, data):
+        user_course = self.context['request'].user.course
+        try:
+            subject = Subject.objects.get(name=data, course=user_course)
+            return subject
+        except Subject.DoesNotExist:
+            self.fail('does_not_exist', slug_name=self.slug_field,
+                      value=smart_str(data))
+        except (TypeError, ValueError):
+            self.fail('invalid')
 
 
 class CustomUserSerializer(BaseUserSerializer):
-    # user_status = StudentStatusSerializer(
-    #    source='studentstatus', read_only=True)
     course_shortname = serializers.SerializerMethodField()
     yearlevel_shortname = serializers.SerializerMethodField()
     semester_shortname = serializers.SerializerMethodField()
@@ -27,14 +41,15 @@ class CustomUserSerializer(BaseUserSerializer):
         many=False, slug_field='name', queryset=Year_Level.objects.all(), required=False, allow_null=True)
     semester = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Semester.objects.all(), required=False, allow_null=True)
-    subjects = serializers.SlugRelatedField(
-        many=True, slug_field='name', queryset=Subject.objects.all(), required=False, allow_null=True)
+    # Use custom slug field for filtering
+    subjects = SubjectSlugRelatedField(
+        many=True, slug_field='name', queryset=Subject.objects.all(), required=False)
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
         fields = ('username', 'email',
-                  'student_id_number', 'year_level', 'yearlevel_shortname', 'semester', 'semester_shortname', 'course', 'course_shortname', 'subjects', 'avatar', 'first_name', 'last_name', 'is_banned')
-        read_only_fields = ('is_banned', 'user_status', 'yearlevel_shortname',
+                  'student_id_number', 'year_level', 'yearlevel_shortname', 'semester', 'semester_shortname', 'course', 'course_shortname', 'subjects', 'avatar', 'first_name', 'last_name', 'irregular')
+        read_only_fields = ('user_status', 'yearlevel_shortname',
                             'semester_shortname', 'course_shortname')
 
     def get_course_shortname(self, instance):
@@ -51,9 +66,9 @@ class CustomUserSerializer(BaseUserSerializer):
         print(validated_data)
         # If course, year_level, or semester is changed
         if any(field in validated_data for field in ['course', 'year_level', 'semester']):
-            if (instance.course != validated_data['course'] or
-                instance.year_level != validated_data['year_level'] or
-                    instance.semester != validated_data['semester']):
+            if (instance.course not in validated_data['course'] or
+                instance.year_level not in validated_data['year_level'] or
+                    instance.semester not in validated_data['semester']):
 
                 # Clear all subjects
                 instance.subjects.clear()
@@ -61,17 +76,16 @@ class CustomUserSerializer(BaseUserSerializer):
                 instance = super().update(instance, validated_data)
                 # Then add new subjects matching the new criteria
                 self.add_subjects(instance)
-
-        # Else update as usual
         else:
-            instance = super().update(instance, validated_data)
+            # Else update as usual
+            super().update(instance, validated_data)
 
         return instance
 
     def add_subjects(self, instance):
         # Get the matching subjects based on the user's course, year level, and semester
         matching_subjects = Subject.objects.filter(
-            courses=instance.course, year_levels=instance.year_level, semesters=instance.semester)
+            course=instance.course, year_level=instance.year_level, semester=instance.semester)
         # Add the matching subjects to the user's subjects list
         instance.subjects.add(*matching_subjects)
 

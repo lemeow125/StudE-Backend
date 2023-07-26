@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2af7c1a36777c63d117eec851085d362eaaa1d3205b7780938bfb5e2e4133b69"
+            "sha256": "a4f6715106c65a972a21b76a8e9f6ca4b79337de9f54f8012b47b146a41c2bfc"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -327,6 +327,9 @@
             "version": "==2.2.0"
         },
         "drf-spectacular": {
+            "extras": [
+                "sidecar"
+            ],
             "hashes": [
                 "sha256:8f5a8f87353d1bb8dcb3f3909b7109b2dcbe1d91f3e069409cf322963e140bd6",
                 "sha256:afeccc6533dcdb4e78afbfcc49f3c5e9c369aeb62f965e4d1a43b165449c147a"
@@ -334,12 +337,12 @@
             "index": "pypi",
             "version": "==0.26.4"
         },
-        "gdal": {
+        "drf-spectacular-sidecar": {
             "hashes": [
-                "sha256:f78861fb5115d5c2f8cf3c52a492ff548da9e1256dc84088947379f90e77e5b6"
+                "sha256:4466e396a875182ac568872cd7a6658fefc386a764272adf088ce7a8d80c795a",
+                "sha256:fae346a00636a57aa164d2778e7162cfaff1f59af8133c2b6a8403c8211a167b"
             ],
-            "path": "./packages/GDAL-3.4.3-cp311-cp311-win_amd64.whl",
-            "version": "==3.4.3"
+            "version": "==2023.7.1"
         },
         "hyperlink": {
             "hashes": [
@@ -353,7 +356,6 @@
                 "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4",
                 "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"
             ],
-            "markers": "python_version >= '3.5'",
             "version": "==3.4"
         },
         "incremental": {
@@ -729,7 +731,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
             "version": "==1.16.0"
         },
         "social-auth-app-django": {

@@ -40,6 +40,9 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'A Capstone project',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
     # OTHER SETTINGS
 }
 
@@ -87,6 +90,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_spectacular',
+    'drf_spectacular_sidecar',
     'django.contrib.gis',
     'rest_framework',
     'rest_framework_simplejwt',
