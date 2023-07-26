@@ -1,12 +1,6 @@
 from django.contrib import admin
-from .models import Subject, SubjectCourse, SubjectSemester, SubjectYearLevel
+from .models import Subject, SubjectCode, SubjectInstance
 
-
-class SubjectAdmin(admin.ModelAdmin):
-    filter_horizontal = ['courses']
-
-
-admin.site.register(Subject, SubjectAdmin)
-admin.site.register(SubjectCourse)
-admin.site.register(SubjectSemester)
-admin.site.register(SubjectYearLevel)
+admin.site.register(Subject)
+admin.site.register(SubjectInstance)
+admin.site.register(SubjectCode)

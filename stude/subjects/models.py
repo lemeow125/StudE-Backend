@@ -6,29 +6,16 @@ from django.db import models
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from courses.models import Course
+from accounts.models import CustomUser
 from year_levels.models import Year_Level
 from semesters.models import Semester
-# Create your models here.
 
 
 class Subject(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    codes = models.ManyToManyField(
-        'subjects.SubjectCode')
-    courses = models.ManyToManyField(
-        'courses.Course', through='subjects.SubjectCourse', related_name='SubjectCourse_subject')
-    students = models.ManyToManyField(
-        'accounts.CustomUser', blank=True)
-
-    year_levels = models.ManyToManyField(
-        'year_levels.Year_Level', through='subjects.SubjectYearLevel', related_name='SubjectYearLevel_subject')
-
-    semesters = models.ManyToManyField(
-        'semesters.Semester', through='subjects.SubjectSemester', related_name='SubjectSemester_subject')
 
     def __str__(self):
-        code_list = ', '.join(self.codes.values_list('code', flat=True))
-        return f'{self.name} ({code_list})'
+        return f'{self.name}'
 
 
 class SubjectCode(models.Model):
@@ -38,46 +25,27 @@ class SubjectCode(models.Model):
         return self.code
 
 
-class SubjectCourse(models.Model):
+class SubjectInstance(models.Model):
     subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE, to_field='name')
+        'subjects.Subject', on_delete=models.CASCADE)
+    students = models.ManyToManyField(
+        CustomUser, blank=True)
+    code = models.ForeignKey(
+        SubjectCode, on_delete=models.CASCADE)
     course = models.ForeignKey(
-        'courses.Course', on_delete=models.CASCADE, null=True, to_field='name')
-
-    def __str__(self):
-        return f'Subject={self.subject.name}, Course={self.course.name}'
-
-    class Meta:
-        unique_together = [['subject', 'course']]
-
-
-class SubjectYearLevel(models.Model):
-    subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE, to_field='name')
+        Course, on_delete=models.CASCADE)
     year_level = models.ForeignKey(
-        'year_levels.Year_Level', on_delete=models.CASCADE, to_field='name')
-
-    def __str__(self):
-        return f'Subject={self.subject.name}, Year Level={self.year_level.name}'
-
-    class Meta:
-        unique_together = [['subject', 'year_level']]
-
-
-class SubjectSemester(models.Model):
-    subject = models.ForeignKey(
-        'subjects.Subject', on_delete=models.CASCADE, to_field='name')
+        Year_Level, on_delete=models.CASCADE)
     semester = models.ForeignKey(
-        'semesters.Semester', on_delete=models.CASCADE, to_field='name')
+        Semester, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'Subject={self.subject.name}, Semester={self.semester.name}'
-
-    class Meta:
-        unique_together = [['subject', 'semester']]
+        return f'Subject: {self.name}({self.code}) - {self.course.shortname} - {self.year_level} - {self.semester}'
 
 
 # Create subjects on initial migrate
+
+
 @receiver(post_migrate)
 def populate_subjects(sender, **kwargs):
     if sender.name == 'subjects':
@@ -130,37 +98,35 @@ def populate_subjects(sender, **kwargs):
                     semester = Semester.objects.filter(
                         name=subject_semester).first()
 
-                    # If subject already exists with relevant info, skip over it
-                    if (Subject.objects.filter(name=subject_name, year_levels=year_level, semesters=semester).exists()):
-                        # print('Duplicate subject')
-                        existing_subjects += 1
-                        continue
-
-                    # Else if subject exists without relevant info, add relevant info
+                    # If Subject exists
                     if (Subject.objects.filter(name=subject_name).exists()):
-                        SUBJECT = Subject.objects.filter(name=subject_name
-                                                         ).first()
 
-                        SUBJECT.courses.add(course)
-                        SUBJECT.year_levels.add(year_level)
-                        SUBJECT.semesters.add(semester)
-                        SUBJECT_CODE = SubjectCode.objects.get_or_create(
-                            code=subject_code)
-                        SUBJECT.codes.add(SUBJECT_CODE[0])
-                        updated_subjects += 1
+                        # If subject instance exists, skip over
+                        if (SubjectInstance.objects.filter(subject__name=subject_name, year_level=year_level, semester=semester).exists()):
+                            # print('Duplicate subject')
+                            existing_subjects += 1
+                            continue
+
+                        # If no subject instance exists, create one
+                        else:
+                            SUBJECT = Subject.objects.filter(
+                                name=subject_name).first()
+                            SUBJECT_CODE, created = SubjectCode.objects.get_or_create(
+                                code=subject_code)
+                            SUBJECT_INSTANCE = SubjectInstance.objects.get_or_create(
+                                subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=SUBJECT_CODE)
+                            updated_subjects += 1
 
                     # If subject does not exist at all, then create new subject
                     else:
 
-                        SUBJECT = Subject.objects.get_or_create(
+                        SUBJECT, created = Subject.objects.get_or_create(
                             name=subject_name,
                         )
-                        SUBJECT[0].courses.set([course])
-                        SUBJECT[0].year_levels.set([year_level])
-                        SUBJECT[0].semesters.set([semester])
-                        SUBJECT_CODE = SubjectCode.objects.get_or_create(
+                        SUBJECT_CODE, created = SubjectCode.objects.get_or_create(
                             code=subject_code)
-                        SUBJECT[0].codes.add(SUBJECT_CODE[0])
+                        SUBJECT_INSTANCE = SubjectInstance.objects.get_or_create(
+                            subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=SUBJECT_CODE)
                         subject_count += 1
 
                     # Set the course, year level, and semester of the subject

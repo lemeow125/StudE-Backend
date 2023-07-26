@@ -1,6 +1,6 @@
 from rest_framework import generics, viewsets
-from .models import Subject
-from .serializers import SubjectSerializer
+from .models import Subject, SubjectInstance
+from .serializers import SubjectSerializer, SubjectInstanceSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -11,30 +11,27 @@ class SubjectListView(generics.ListAPIView):
 
 
 class SubjectByCourseView(generics.ListAPIView):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
+    queryset = SubjectInstance.objects.all()
+    serializer_class = SubjectInstanceSerializer
 
     def get(self, request, course_slug):
-        # Retrieve the subjects based on year level and semester slugs
-        subjects = Subject.objects.filter(
-            courses__shortname=course_slug).distinct()
+        # Retrieve the subjects based on course slug
+        subjects = SubjectInstance.objects.filter(
+            course__shortname=course_slug)
 
         # Serialize the subjects
-        serializer = SubjectSerializer(subjects, many=True)
-
+        serializer = SubjectInstanceSerializer(subjects, many=True)
         return Response(serializer.data)
 
 
 class SubjectByCourseYearSemesterView(generics.ListAPIView):
-    queryset = Subject.objects.all()
+    queryset = SubjectInstance.objects.all()
     serializer_class = SubjectSerializer
 
     def get(self, request, course_slug, year_slug, semester_slug):
         # Retrieve the subjects based on year level and semester slugs
-        subjects = Subject.objects.filter(
-            courses__shortname=course_slug, year_levels__shortname=year_slug, semesters__shortname=semester_slug).distinct()
-
+        subjects = SubjectInstance.objects.filter(
+            course__shortname=course_slug, year_level__shortname=year_slug, semester__shortname=semester_slug)
         # Serialize the subjects
-        serializer = SubjectSerializer(subjects, many=True)
-
+        serializer = SubjectInstanceSerializer(subjects, many=True)
         return Response(serializer.data)
