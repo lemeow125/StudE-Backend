@@ -910,7 +910,6 @@ components:
           type: array
           items:
             type: string
-            nullable: true
         avatar:
           type: string
           format: uri
@@ -923,11 +922,9 @@ components:
           maxLength: 100
         irregular:
           type: boolean
-          readOnly: true
       required:
       - course_shortname
       - first_name
-      - irregular
       - last_name
       - semester_shortname
       - student_id_number
@@ -1023,7 +1020,6 @@ components:
           type: array
           items:
             type: string
-            nullable: true
         avatar:
           type: string
           format: uri
@@ -1036,7 +1032,6 @@ components:
           maxLength: 100
         irregular:
           type: boolean
-          readOnly: true
     PatchedStudentStatus:
       type: object
       properties:
@@ -1179,8 +1174,9 @@ components:
         id:
           type: integer
           readOnly: true
-        subject:
+        name:
           type: string
+          maxLength: 64
         code:
           type: string
           maxLength: 16
@@ -1197,8 +1193,8 @@ components:
       - code
       - course
       - id
+      - name
       - semester
-      - subject
       - year_level
     TokenObtainPair:
       type: object
