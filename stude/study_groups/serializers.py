@@ -8,7 +8,7 @@ from landmarks.models import Landmark
 
 class StudyGroupSerializer(serializers.ModelSerializer):
     users = serializers.SlugRelatedField(
-        queryset=CustomUser.objects.all(), many=True, slug_field='name', required=False, allow_null=True)
+        queryset=CustomUser.objects.all(), many=True, slug_field='full_name', required=False, allow_null=True)
     subject = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
     location = PointField()

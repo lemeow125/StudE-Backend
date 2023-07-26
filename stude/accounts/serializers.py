@@ -14,6 +14,8 @@ from semesters.models import Semester
 from subjects.models import Subject
 from django.contrib.gis.geos import Point
 from django.utils.encoding import smart_str
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 
 # There can be multiple subject instances with the same name, only differing in course, year level, and semester. We filter them here
 
@@ -52,12 +54,15 @@ class CustomUserSerializer(BaseUserSerializer):
         read_only_fields = ('user_status', 'yearlevel_shortname',
                             'semester_shortname', 'course_shortname')
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_course_shortname(self, instance):
         return instance.course.shortname if instance.course else None
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_yearlevel_shortname(self, instance):
         return instance.year_level.shortname if instance.year_level else None
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_semester_shortname(self, instance):
         return instance.semester.shortname if instance.semester else None
 
