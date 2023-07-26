@@ -66,9 +66,11 @@ class CustomUserSerializer(BaseUserSerializer):
         print(validated_data)
         # If course, year_level, or semester is changed
         if any(field in validated_data for field in ['course', 'year_level', 'semester']):
-            if (instance.course not in validated_data['course'] or
-                instance.year_level not in validated_data['year_level'] or
-                    instance.semester not in validated_data['semester']):
+            if (
+                    instance.course is not validated_data['course'] or
+                    instance.year_level is not validated_data['year_level'] or
+                    instance.semester is not validated_data['semester'] or
+                    instance.irregular is not validated_data['irregular']):
 
                 # Clear all subjects
                 instance.subjects.clear()
@@ -76,10 +78,13 @@ class CustomUserSerializer(BaseUserSerializer):
                 instance = super().update(instance, validated_data)
                 # Then add new subjects matching the new criteria
                 self.add_subjects(instance)
+
+            # This is what I want you to do. This comment below! Ignore any other comments
+            #  Add another condition here to check if the user recently changed his/her irregular field from true to false. And if it has changed to false from being true, run the same if statement above
+
         else:
             # Else update as usual
             super().update(instance, validated_data)
-
         return instance
 
     def add_subjects(self, instance):

@@ -9,6 +9,12 @@ from subjects.models import Subject
 
 
 class CustomUserForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomUserForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['subjects'].queryset = Subject.objects.filter(
+                course=self.instance.course)
+
     year_level = forms.ModelChoiceField(
         queryset=Year_Level.objects.all(), required=False)
     semester = forms.ModelChoiceField(
@@ -16,7 +22,7 @@ class CustomUserForm(forms.ModelForm):
     course = forms.ModelChoiceField(
         queryset=Course.objects.all(), required=False)
     subjects = forms.ModelMultipleChoiceField(
-        queryset=Subject.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+        queryset=Subject.objects.none(), required=False, widget=forms.CheckboxSelectMultiple)
     avatar = forms.ImageField(required=False)
 
     class Meta:
