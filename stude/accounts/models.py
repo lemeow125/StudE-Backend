@@ -8,6 +8,8 @@ from semesters.models import Semester
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 import os
+from uuid import uuid4
+from django.utils.deconstruct import deconstructible
 
 
 def validate_student_id(value):
@@ -18,12 +20,27 @@ def validate_student_id(value):
 
 
 class CustomUser(AbstractUser):
+    # Function for avatar uploads
     def _get_upload_to(instance, filename):
         base_filename, file_extension = os.path.splitext(filename)
         # Get the student ID number
+        ext = base_filename.split('.')[-1]
+        filename = '{}.{}'.format(uuid4().hex, ext)
+
         student_id = str(instance.student_id_number)
-        new_filename = f"{student_id}_{file_extension}"
+        new_filename = f"{student_id}_{filename}_{file_extension}"
         return os.path.join('avatars', new_filename)
+
+    # Delete old avatar file if new one is uploaded
+    def save(self, *args, **kwargs):
+        try:
+            # is the object in the database yet?
+            this = CustomUser.objects.get(id=self.id)
+            if this.avatar != self.avatar:
+                this.avatar.delete(save=False)
+        except:
+            pass  # when new photo then we do nothing, normal case
+        super(CustomUser, self).save(*args, **kwargs)
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

@@ -16,6 +16,7 @@ from django.contrib.gis.geos import Point
 from django.utils.encoding import smart_str
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
+from drf_extra_fields.fields import Base64ImageField
 
 # There can be multiple subject instances with the same name, only differing in course, year level, and semester. We filter them here
 
@@ -46,6 +47,7 @@ class CustomUserSerializer(BaseUserSerializer):
     # Use custom slug field for filtering
     subjects = SubjectSlugRelatedField(
         many=True, slug_field='name', queryset=Subject.objects.all(), required=False)
+    avatar = Base64ImageField()
 
     class Meta(BaseUserSerializer.Meta):
         model = CustomUser
