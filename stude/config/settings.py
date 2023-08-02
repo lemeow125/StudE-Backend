@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv  # Python dotenv
 import os
@@ -235,9 +236,10 @@ else:
 
 SITE_NAME = 'Stud-E'
 
-JWT_TOKEN_LIFETIME = 10800
-ACCESS_TOKEN_LIFETIME = JWT_TOKEN_LIFETIME
-REFRESH_TOKEN_LIFETIME = 24 * JWT_TOKEN_LIFETIME
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=360),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=360)
+}
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (8.48567, 124.65642),
