@@ -1,8 +1,8 @@
 version: '3.9'
 
 services:
-  # Python app service
-  python_app:
+  # Django App
+  django_backend:
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,4 +12,8 @@ services:
     environment:
       - PYTHONBUFFERED=1
     command: ["python", "stude/manage.py", "runserver"]
+    volumes:
+      - stude:/app
 
+volumes:
+  stude:
