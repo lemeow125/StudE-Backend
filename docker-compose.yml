@@ -9,14 +9,7 @@ services:
     image: stude_backend:latest
     ports:
       - "8000:8000"  # Expose port 8000 for the web server
-    depends_on:
-      - redis_server  # Ensure the Redis server starts before the Python app
     environment:
       - PYTHONBUFFERED=1
     command: ["python", "stude/manage.py", "runserver"]
 
-  # Redis server service
-  redis_server:
-    image: redis:latest
-    ports:
-      - "6379:6379"  # Expose default Redis port
