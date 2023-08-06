@@ -8,9 +8,10 @@ class StudentStatusAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = StudentStatusSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
+    def get_queryset(self):
         user = self.request.user
-        return StudentStatus.objects.get(user=user)
+        queryset = StudentStatus.objects.filter(user=user)
+        return queryset
 
 
 class ActiveStudentStatusListAPIView(generics.ListAPIView):
@@ -19,4 +20,4 @@ class ActiveStudentStatusListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return StudentStatus.objects.filter(active=True)
+        return StudentStatus.objects.filter(user != user).filter(active=True)

@@ -1,6 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
-from django.utils.text import slugify
 from django.db import models
 from courses.models import Course
 from year_levels.models import Year_Level
@@ -9,14 +7,6 @@ from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 import os
 from uuid import uuid4
-from django.utils.deconstruct import deconstructible
-
-
-def validate_student_id(value):
-    try:
-        int(value)
-    except (ValueError, TypeError):
-        raise ValidationError('Student ID must be a valid integer.')
 
 
 class CustomUser(AbstractUser):
@@ -52,8 +42,7 @@ class CustomUser(AbstractUser):
     is_student = models.BooleanField(default=True)
     is_studying = models.BooleanField(default=False)
     irregular = models.BooleanField(default=False)
-    student_id_number = models.CharField(
-        max_length=16, validators=[validate_student_id], null=False)
+    student_id_number = models.IntegerField(null=False)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
     course = models.ForeignKey(
         Course,
@@ -85,21 +74,23 @@ def create_superuser(sender, **kwargs):
         username = os.getenv('DJANGO_ADMIN_USERNAME')
         email = os.getenv('DJANGO_ADMIN_EMAIL')
         password = os.getenv('DJANGO_ADMIN_PASSWORD')
+        student_id_number = 0000
 
         if not User.objects.filter(username=username).exists():
             # Create the superuser with is_active set to False
             superuser = User.objects.create_superuser(
-                username=username, email=email, password=password)
+                username=username, email=email, password=password, is_student=False, student_id_number=student_id_number)
 
             # Activate the superuser
             superuser.is_active = True
+            print('Created admin account')
             superuser.save()
 
         User = CustomUser
         username = 'keannu125'
         email = os.getenv('DJANGO_ADMIN_EMAIL')
         password = os.getenv('DJANGO_ADMIN_PASSWORD')
-        student_id_number = '2020300490'
+        student_id_number = 2020300490
         first_name = 'Keannu'
         last_name = 'Bernasol'
         # course = 'Bachelor of Science in Information Technology'
@@ -111,6 +102,7 @@ def create_superuser(sender, **kwargs):
             user = User.objects.create_user(
                 username=username, email=email, password=password, first_name=first_name, last_name=last_name, student_id_number=student_id_number)
 
-            # Activate the superuser
+            # Activate the user
             user.is_active = True
+            print('Created keannu account')
             user.save()
