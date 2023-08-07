@@ -29,10 +29,10 @@ class StudentStatusSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         active = validated_data.get('active', None)
-        subject = validated_data.get('subject', None)
+        # subject = validated_data.get('subject', None)
 
-        # If status is set as inactive or if no subject is specified in the request, clear the student status
-        if active is not None and active is False or not subject:
+        # If status is set as false in the request, clear the student status
+        if active is False:
             validated_data['location'] = Point(0, 0)
             validated_data['subject'] = None
             validated_data['landmark'] = None
