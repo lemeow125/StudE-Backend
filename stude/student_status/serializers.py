@@ -26,8 +26,13 @@ class StudentStatusSerializer(serializers.ModelSerializer):
         return student_status
 
     def update(self, instance, validated_data):
+
         active = validated_data.get('active', None)
         subject = validated_data.get('subject', None)
+
+        # Do not update if instance if active is not specified
+        if active is None:
+            return instance
 
         # If status is set as inactive or if no subject is specified in the request, clear the student status
         if active is not None and active is False or not subject:

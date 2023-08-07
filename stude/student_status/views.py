@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import StudentStatus
@@ -12,6 +13,11 @@ class StudentStatusAPIView(generics.RetrieveUpdateAPIView):
         user = self.request.user
         queryset = StudentStatus.objects.filter(user=user)
         return queryset
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset)
+        return obj
 
 
 class ActiveStudentStatusListAPIView(generics.ListAPIView):
