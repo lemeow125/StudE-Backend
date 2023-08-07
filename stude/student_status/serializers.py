@@ -13,6 +13,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
     location = PointField(required=True)
     landmark = serializers.SlugRelatedField(
         queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+    active = serializers.BooleanField(required=True)
 
     class Meta:
         model = StudentStatus
@@ -29,10 +30,6 @@ class StudentStatusSerializer(serializers.ModelSerializer):
 
         active = validated_data.get('active', None)
         subject = validated_data.get('subject', None)
-
-        # Do not update if instance if active is not specified
-        if active is None:
-            return instance
 
         # If status is set as inactive or if no subject is specified in the request, clear the student status
         if active is not None and active is False or not subject:
