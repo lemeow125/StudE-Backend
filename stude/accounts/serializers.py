@@ -69,39 +69,54 @@ class CustomUserSerializer(BaseUserSerializer):
         return instance.semester.shortname if instance.semester else None
 
     def update(self, instance, validated_data):
-        # First, we'll remove all the existing subjects from the user
-        print(validated_data)
-        # If course, year_level, or semester is changed
-        if any(field in validated_data for field in ['course', 'year_level', 'semester']):
-            if (
-                    instance.course is not validated_data['course'] or
-                    instance.year_level is not validated_data['year_level'] or
-                    instance.semester is not validated_data['semester'] or
-                    instance.irregular is not validated_data['irregular']):
-
-                # Clear all subjects
+        # If irregular is updated and changed in PATCH request
+        if 'irregular' in validated_data and validated_data['irregular'] is not instance.irregular:
+            # Record the changes into the DB
+            super().update(instance, validated_data)
+            # Then check if irregular is False
+            if (instance.irregular is False):
+                # And if so, remove all current subjects
                 instance.subjects.clear()
-                # Update the user instance with the validated data
-                instance = super().update(instance, validated_data)
-                # Then add new subjects matching the new criteria
+                # And add the ones matching the required criteria
                 self.add_subjects(instance)
 
-            # This is what I want you to do. This comment below! Ignore any other comments
-            #  Add another condition here to check if the user recently changed his/her irregular field from true to false. And if it has changed to false from being true, run the same if statement above
-
-        else:
-            # Else update as usual
+        # If year_level is updated and changed in PATCH request
+        elif 'year_level' in validated_data and validated_data['year_level'] is not instance.year_level or instance.year_level is None:
+            # Record the changes into the DB
             super().update(instance, validated_data)
-        return instance
+            # If so, remove all current subjects
+            instance.subjects.clear()
+            # And add the ones matching the required criteria
+            self.add_subjects(instance)
+
+        # If semester is updated and changed in PATCH request
+        elif 'semester' in validated_data and validated_data['semester'] is not instance.semester or instance.semester is None:
+            # Record the changes into the DB
+            super().update(instance, validated_data)
+            # If so, remove all current subjects
+            instance.subjects.clear()
+            # And add the ones matching the required criteria
+            self.add_subjects(instance)
+
+        # If course is updated and changed in PATCH request
+        elif 'course' in validated_data and validated_data['course'] is not instance.course or instance.course is None:
+            # Record the changes into the DB
+            super().update(instance, validated_data)
+            # If so, remove all current subjects
+            instance.subjects.clear()
+            # And add the ones matching the required criteria
+            self.add_subjects(instance)
+
+        # Finally, update the instance with the validated data and return it
+        return super().update(instance, validated_data)
 
     def add_subjects(self, instance):
         # Get the matching subjects based on the user's course, year level, and semester
         matching_subjects = Subject.objects.filter(
             course=instance.course, year_level=instance.year_level, semester=instance.semester)
         # Add the matching subjects to the user's subjects list
+        print(matching_subjects)
         instance.subjects.add(*matching_subjects)
-
-# The model from your custom user
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
