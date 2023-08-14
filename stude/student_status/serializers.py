@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from .models import StudentStatus
 from subjects.models import Subject
 from django.contrib.gis.geos import Point
@@ -37,6 +37,10 @@ class StudentStatusSerializer(serializers.ModelSerializer):
             validated_data['subject'] = None
             validated_data['landmark'] = None
         else:
+            if 'subject' not in validated_data:
+                raise serializers.ValidationError(
+                    {'subject': 'This field may not be empty if active is true'})
+            # To-do: Add geofencing to ensure locations are always within USTP
             # Check each landmark to see if our location is within it
             for landmark in Landmark.objects.all():
                 if landmark.location.contains(validated_data['location']):
