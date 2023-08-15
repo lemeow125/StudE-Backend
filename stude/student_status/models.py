@@ -13,7 +13,7 @@ class StudentStatus(models.Model):
     subject = models.ForeignKey(
         'subjects.Subject', on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(default=False)
-    timestamp = models.DateField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     landmark = models.ForeignKey(
         'landmarks.Landmark', on_delete=models.SET_NULL, null=True)
     study_group = models.ManyToManyField(

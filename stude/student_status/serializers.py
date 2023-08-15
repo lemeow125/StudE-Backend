@@ -13,11 +13,14 @@ class StudentStatusSerializer(serializers.ModelSerializer):
     location = PointField(required=True)
     landmark = serializers.SlugRelatedField(
         queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+
+    timestamp = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     active = serializers.BooleanField(required=True)
 
     class Meta:
         model = StudentStatus
-        fields = ['user', 'subject', 'location', 'active', 'landmark']
+        fields = ['user', 'subject', 'location',
+                  'timestamp', 'active', 'landmark']
         read_only_fields = ['user', 'landmark']
 
     def create(self, validated_data):
