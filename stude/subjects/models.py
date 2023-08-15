@@ -58,7 +58,7 @@ def populate_subjects(sender, **kwargs):
                     subject_year_level = year_term[0].strip()
                     subject_semester = year_term[1].strip()
                     subject_code = row[1]
-                    subject_name = row[2].replace("\n", " ")
+                    subject_name = row[2].replace("\n", " ").replace("\r", "")
 
                     # Definitions of subjects to ignore
                     ignored_subject_codes = ['NSTP', 'ROTC', 'CWTS', 'LTS']

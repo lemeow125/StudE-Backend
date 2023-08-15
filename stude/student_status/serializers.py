@@ -17,7 +17,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentStatus
-        fields = '__all__'
+        fields = ['user', 'subject', 'location', 'active', 'landmark']
         read_only_fields = ['user', 'landmark']
 
     def create(self, validated_data):
