@@ -17,6 +17,7 @@ django-leaflet = "*"
 django-extra-fields = "*"
 drf-spectacular = {extras = ["sidecar"], version = "*"}
 gdal = {path = "./packages/GDAL-3.4.3-cp311-cp311-win_amd64.whl"}
+pip = "*"
 
 [dev-packages]
 
