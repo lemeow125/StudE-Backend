@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     image: stude_backend:latest
     ports:
-      - "8000:8000"  # Expose port 8000 for the web server
+      - "8192:8000"  # Expose port 8000 for the web server
     environment:
       - PYTHONBUFFERED=1
     command: ["python", "stude/manage.py", "runserver"]

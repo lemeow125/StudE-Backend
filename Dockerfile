@@ -1,4 +1,5 @@
 # Use the official Python 3.11 image
+# FROM --platform=arm64 python:3.11.4-bookworm
 FROM python:3.11.4-bookworm
 
 ENV PYTHONBUFFERED 1
