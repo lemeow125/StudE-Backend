@@ -20,7 +20,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentStatus
         fields = ['user', 'subject', 'location',
-                  'timestamp', 'active', 'landmark']
+                  'timestamp', 'active', 'study_group', 'landmark']
         read_only_fields = ['user', 'landmark']
 
     def create(self, validated_data):
@@ -39,6 +39,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
             validated_data['location'] = Point(0, 0)
             validated_data['subject'] = None
             validated_data['landmark'] = None
+            validated_data['study_group'] = None
         else:
             if 'subject' not in validated_data:
                 raise serializers.ValidationError(
@@ -51,3 +52,11 @@ class StudentStatusSerializer(serializers.ModelSerializer):
                     break
 
         return super().update(instance, validated_data)
+
+
+class StudentStatusLocationSerializer(serializers.ModelSerializer):
+    location = PointField(required=True)
+
+    class Meta:
+        model = StudentStatus
+        fields = ['location']
