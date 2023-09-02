@@ -42,7 +42,7 @@ class StudentStatusListByStudentStatusLocation(generics.ListAPIView):
         user_location = fromstr(
             user_status.location, srid=4326)
 
-        return StudentStatus.objects.filter(subject__in=user.subjects.all()).annotate(distance=Distance('location', user_location)).filter(distance__lte=50)
+        return StudentStatus.objects.filter(user != user).filter(subject__in=user.subjects.all()).annotate(distance=Distance('location', user_location)).filter(distance__lte=50)
 
 
 class StudentStatusListByCurrentLocation(viewsets.ViewSet):
@@ -57,7 +57,7 @@ class StudentStatusListByCurrentLocation(viewsets.ViewSet):
             raise exceptions.ValidationError("Location is required")
 
         user_location = fromstr(location_str, srid=4326)
-        queryset = StudentStatus.objects.filter(subject__in=user.subjects.all()).annotate(
+        queryset = StudentStatus.objects.filter(user != user).filter(subject__in=user.subjects.all()).annotate(
             distance=Distance('location', user_location)).filter(distance__lte=50)
         serializer = StudentStatusLocationSerializer(queryset, many=True)
         return Response(serializer.data)

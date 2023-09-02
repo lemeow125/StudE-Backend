@@ -235,8 +235,8 @@ else:
 SITE_NAME = 'Stud-E'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=360),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=360)
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=3600),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=3600)
 }
 
 LEAFLET_CONFIG = {
