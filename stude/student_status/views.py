@@ -29,8 +29,9 @@ class ActiveStudentStatusListAPIView(generics.ListAPIView):
 
 
 class StudentStatusListByStudentStatusLocation(generics.ListAPIView):
-    serializer_class = StudentStatusSerializer
+    serializer_class = StudentStatusLocationSerializer
     permission_classes = [IsAuthenticated]
+    http_method_names = ['get']
 
     def get_queryset(self):
         user = self.request.user
@@ -46,7 +47,8 @@ class StudentStatusListByStudentStatusLocation(generics.ListAPIView):
 
 class StudentStatusListByCurrentLocation(viewsets.ViewSet):
     serializer_class = StudentStatusLocationSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+    http_method_names = ['post']
 
     def create(self, request):
         user = self.request.user
@@ -57,5 +59,5 @@ class StudentStatusListByCurrentLocation(viewsets.ViewSet):
         user_location = fromstr(location_str, srid=4326)
         queryset = StudentStatus.objects.filter(subject__in=user.subjects.all()).annotate(
             distance=Distance('location', user_location)).filter(distance__lte=50)
-        serializer = StudentStatusSerializer(queryset, many=True)
+        serializer = StudentStatusLocationSerializer(queryset, many=True)
         return Response(serializer.data)

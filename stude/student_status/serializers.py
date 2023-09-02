@@ -55,8 +55,25 @@ class StudentStatusSerializer(serializers.ModelSerializer):
 
 
 class StudentStatusLocationSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.full_name', read_only=True)
+    subject = serializers.SlugRelatedField(
+        queryset=Subject.objects.all(), slug_field='name', required=True)
     location = PointField(required=True)
+    distance = serializers.SerializerMethodField()
+    landmark = serializers.SlugRelatedField(
+        queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
 
     class Meta:
         model = StudentStatus
-        fields = ['location']
+        fields = ['user', 'location', 'distance',
+                  'subject', 'active', 'study_group', 'landmark']
+        read_only_fields = ['user', 'distance', 'subject',
+                            'active', 'study_group', 'landmark']
+
+    def get_distance(self, obj):
+        return obj.distance.km
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['distance'] = self.get_distance(instance)
+        return representation

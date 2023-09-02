@@ -42,7 +42,7 @@ class CustomUser(AbstractUser):
     is_student = models.BooleanField(default=True)
     is_studying = models.BooleanField(default=False)
     irregular = models.BooleanField(default=False)
-    student_id_number = models.IntegerField(null=False)
+    student_id_number = models.IntegerField(null=False, unique=True)
     avatar = models.ImageField(upload_to=_get_upload_to, null=True)
     course = models.ForeignKey(
         Course,
@@ -93,9 +93,6 @@ def create_superuser(sender, **kwargs):
         student_id_number = 2020300490
         first_name = 'Keannu'
         last_name = 'Bernasol'
-        # course = 'Bachelor of Science in Information Technology'
-        # year_level = '1st Year'
-        # semester = '1st Semester'
 
         if not User.objects.filter(username=username).exists():
             # Create the superuser with is_active set to False
@@ -104,5 +101,39 @@ def create_superuser(sender, **kwargs):
 
             # Activate the user
             user.is_active = True
-            print('Created keannu account')
+            print('Created keannu125 account')
+            user.save()
+
+        username = 'keannu126'
+        email = os.getenv('DJANGO_ADMIN_EMAIL')
+        password = os.getenv('DJANGO_ADMIN_PASSWORD')
+        student_id_number = 2020300491
+        first_name = 'Keannu2'
+        last_name = 'Bernasol2'
+
+        if not User.objects.filter(username=username).exists():
+            # Create the superuser with is_active set to False
+            user = User.objects.create_user(
+                username=username, email=email, password=password, first_name=first_name, last_name=last_name, student_id_number=student_id_number)
+
+            # Activate the user
+            user.is_active = True
+            print('Created keannu126 account')
+            user.save()
+
+        username = 'keannu127'
+        email = os.getenv('DJANGO_ADMIN_EMAIL')
+        password = os.getenv('DJANGO_ADMIN_PASSWORD')
+        student_id_number = 2020300492
+        first_name = 'Keannu3'
+        last_name = 'Bernasol3'
+
+        if not User.objects.filter(username=username).exists():
+            # Create the superuser with is_active set to False
+            user = User.objects.create_user(
+                username=username, email=email, password=password, first_name=first_name, last_name=last_name, student_id_number=student_id_number)
+
+            # Activate the user
+            user.is_active = True
+            print('Created keannu127 account')
             user.save()
