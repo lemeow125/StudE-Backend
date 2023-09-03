@@ -11,7 +11,7 @@ from django.contrib.auth.password_validation import validate_password
 from courses.models import Course
 from year_levels.models import Year_Level
 from semesters.models import Semester
-from subjects.models import Subject
+from subjects.models import Subject, SubjectInstance
 from django.contrib.gis.geos import Point
 from django.utils.encoding import smart_str
 from drf_spectacular.utils import extend_schema_field
@@ -25,9 +25,10 @@ class SubjectSlugRelatedField(serializers.SlugRelatedField):
     def to_internal_value(self, data):
         user_course = self.context['request'].user.course
         try:
-            subject = Subject.objects.get(name=data, course=user_course)
+            subject = SubjectInstance.objects.get(
+                name=data, course=user_course)
             return subject
-        except Subject.DoesNotExist:
+        except SubjectInstance.DoesNotExist:
             self.fail('does_not_exist', slug_name=self.slug_field,
                       value=smart_str(data))
         except (TypeError, ValueError):
@@ -46,7 +47,7 @@ class CustomUserSerializer(BaseUserSerializer):
         many=False, slug_field='name', queryset=Semester.objects.all(), required=False, allow_null=True)
     # Use custom slug field for filtering
     subjects = SubjectSlugRelatedField(
-        many=True, slug_field='name', queryset=Subject.objects.all(), required=False)
+        many=True, slug_field='name', queryset=SubjectInstance.objects.all(), required=False)
     avatar = Base64ImageField()
 
     class Meta(BaseUserSerializer.Meta):
@@ -112,7 +113,7 @@ class CustomUserSerializer(BaseUserSerializer):
 
     def add_subjects(self, instance):
         # Get the matching subjects based on the user's course, year level, and semester
-        matching_subjects = Subject.objects.filter(
+        matching_subjects = SubjectInstance.objects.filter(
             course=instance.course, year_level=instance.year_level, semester=instance.semester)
         # Add the matching subjects to the user's subjects list
         print(matching_subjects)

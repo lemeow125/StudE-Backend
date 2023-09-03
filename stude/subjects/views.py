@@ -1,5 +1,5 @@
 from rest_framework import generics, viewsets
-from .models import Subject
+from .models import Subject, SubjectInstance
 from .serializers import SubjectSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,12 +8,12 @@ from rest_framework.permissions import IsAuthenticated
 
 class SubjectListAllView(generics.ListAPIView):
     serializer_class = SubjectSerializer
-    queryset = Subject.objects.all()
+    queryset = SubjectInstance.objects.all()
 
 
 class SubjectListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Subject.objects.all()
+    queryset = SubjectInstance.objects.all()
     serializer_class = SubjectSerializer
 
     def get(self, request):
@@ -21,14 +21,14 @@ class SubjectListView(generics.ListAPIView):
         user_course = user.course
         # If user is irregular, show all subjects in his/her course to choose from
         if (user.irregular):
-            subjects = Subject.objects.filter(
+            subjects = SubjectInstance.objects.filter(
                 course__name=user_course)
 
         # Else, return subjects that match the user's student info (Year Level, Semster, Course)
         else:
             user_yearlevel = user.year_level
             user_semester = user.semester
-            subjects = Subject.objects.filter(
+            subjects = SubjectInstance.objects.filter(
                 course__name=user.course, year_level__name=user_yearlevel, semester__name=user_semester)
 
         # Serialize the subjects
@@ -37,12 +37,12 @@ class SubjectListView(generics.ListAPIView):
 
 
 class SubjectByCourseView(generics.ListAPIView):
-    queryset = Subject.objects.all()
+    queryset = SubjectInstance.objects.all()
     serializer_class = SubjectSerializer
 
     def get(self, request, course_slug):
         # Retrieve the subjects based on course slug
-        subjects = Subject.objects.filter(
+        subjects = SubjectInstance.objects.filter(
             course__shortname=course_slug)
 
         # Serialize the subjects

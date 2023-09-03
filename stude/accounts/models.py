@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
         on_delete=models.SET_NULL,
         null=True
     )
-    subjects = models.ManyToManyField('subjects.Subject')
+    subjects = models.ManyToManyField('subjects.SubjectInstance')
 
     @property
     def full_name(self):

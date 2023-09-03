@@ -8,7 +8,7 @@ from landmarks.models import Landmark
 
 class StudentStatusSerializer(serializers.ModelSerializer):
     subject = serializers.SlugRelatedField(
-        queryset=Subject.objects.all(), slug_field='name', required=True)
+        queryset=Subject.objects.all(), slug_field='name', required=True, many=False)
     user = serializers.CharField(source='user.full_name', read_only=True)
     location = PointField(required=True)
     landmark = serializers.SlugRelatedField(
@@ -32,8 +32,8 @@ class StudentStatusSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         active = validated_data.get('active', None)
-        # subject = validated_data.get('subject', None)
-
+        subject = validated_data.get('subject', None)
+        print('=====', subject, '======')
         # If status is set as false in the request, clear the student status
         if active is False:
             validated_data['location'] = Point(0, 0)

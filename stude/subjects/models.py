@@ -15,6 +15,14 @@ class Subject(models.Model):
     name = models.CharField(max_length=64)
     students = models.ManyToManyField(
         CustomUser, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class SubjectInstance(models.Model):
+    subject = models.ForeignKey(
+        Subject, on_delete=models.CASCADE)
     code = models.CharField(max_length=16)
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE)
@@ -23,11 +31,8 @@ class Subject(models.Model):
     semester = models.ForeignKey(
         Semester, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = ['name', 'course', 'year_level', 'semester']
-
     def __str__(self):
-        return f'Subject: {self.name}({self.code}) - {self.course.shortname} - {self.year_level} - {self.semester}'
+        return f'Subject: {self.subject.name}({self.code}) - {self.course.shortname} - {self.year_level} - {self.semester}'
 # Create subjects on initial migrate
 
 
@@ -82,17 +87,32 @@ def populate_subjects(sender, **kwargs):
                     semester = Semester.objects.filter(
                         name=subject_semester).first()
 
-                    # If subject exists, skip over
-                    if (Subject.objects.filter(name=subject_name, course=course, year_level=year_level, semester=semester, code=subject_code).exists()):
-                        # print('Duplicate subject')
-                        existing_subjects += 1
-                        continue
-
-                    # If subject does not exist at all, then create new subject
-                    else:
-
+                    # Check if subject exists
+                    if (Subject.objects.filter(name=subject_name).exists()):
+                        # If so, get the subject
                         SUBJECT, created = Subject.objects.get_or_create(
-                            name=subject_name, course=course, year_level=year_level, semester=semester, code=subject_code)
+                            name=subject_name)
+                        # Then check if subject instance exists
+                        if (SubjectInstance.objects.filter(subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=subject_code).exists()):
+                            # If subject instance already exists, skip
+                            existing_subjects += 1
+                            continue
+
+                        # If subject instance does not exist, create it
+                        else:
+                            SUBJECT, created = Subject.objects.get_or_create(
+                                name=subject_name)
+                            SUBJECT_INSTANCE, created = SubjectInstance.objects.get_or_create(
+                                subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=subject_code)
+                            subject_count += 1
+                    # If subject does not exist
+                    else:
+                        # Create subject first
+                        SUBJECT, created = Subject.objects.get_or_create(
+                            name=subject_name)
+                        # Then create instance
+                        SUBJECT_INSTANCE, created = SubjectInstance.objects.get_or_create(
+                            subject=SUBJECT, course=course, year_level=year_level, semester=semester, code=subject_code)
                         subject_count += 1
 
                     # Set the course, year level, and semester of the subject
