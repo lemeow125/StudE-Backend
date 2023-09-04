@@ -1,20 +1,20 @@
 from rest_framework import generics, viewsets
 from .models import Subject, SubjectInstance
-from .serializers import SubjectSerializer
+from .serializers import SubjectInstanceSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 
 class SubjectListAllView(generics.ListAPIView):
-    serializer_class = SubjectSerializer
+    serializer_class = SubjectInstanceSerializer
     queryset = SubjectInstance.objects.all()
 
 
 class SubjectListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = SubjectInstance.objects.all()
-    serializer_class = SubjectSerializer
+    serializer_class = SubjectInstanceSerializer
 
     def get(self, request):
         user = self.request.user
@@ -32,13 +32,13 @@ class SubjectListView(generics.ListAPIView):
                 course__name=user.course, year_level__name=user_yearlevel, semester__name=user_semester)
 
         # Serialize the subjects
-        serializer = SubjectSerializer(subjects, many=True)
+        serializer = SubjectInstanceSerializer(subjects, many=True)
         return Response(serializer.data)
 
 
 class SubjectByCourseView(generics.ListAPIView):
     queryset = SubjectInstance.objects.all()
-    serializer_class = SubjectSerializer
+    serializer_class = SubjectInstanceSerializer
 
     def get(self, request, course_slug):
         # Retrieve the subjects based on course slug
@@ -46,18 +46,18 @@ class SubjectByCourseView(generics.ListAPIView):
             course__shortname=course_slug)
 
         # Serialize the subjects
-        serializer = SubjectSerializer(subjects, many=True)
+        serializer = SubjectInstanceSerializer(subjects, many=True)
         return Response(serializer.data)
 
 
 class SubjectByCourseYearSemesterView(generics.ListAPIView):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
+    queryset = SubjectInstance.objects.all()
+    serializer_class = SubjectInstanceSerializer
 
     def get(self, request, course_slug, year_slug, semester_slug):
         # Retrieve the subjects based on year level and semester slugs
-        subjects = Subject.objects.filter(
+        subjects = SubjectInstance.objects.filter(
             course__shortname=course_slug, year_level__shortname=year_slug, semester__shortname=semester_slug)
         # Serialize the subjects
-        serializer = SubjectSerializer(subjects, many=True)
+        serializer = SubjectInstanceSerializer(subjects, many=True)
         return Response(serializer.data)

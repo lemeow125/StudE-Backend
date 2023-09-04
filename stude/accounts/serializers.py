@@ -22,11 +22,14 @@ from drf_extra_fields.fields import Base64ImageField
 
 
 class SubjectSlugRelatedField(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        return value.subject.name
+
     def to_internal_value(self, data):
         user_course = self.context['request'].user.course
         try:
             subject = SubjectInstance.objects.get(
-                name=data, course=user_course)
+                subject__name=data, course=user_course)
             return subject
         except SubjectInstance.DoesNotExist:
             self.fail('does_not_exist', slug_name=self.slug_field,
@@ -47,7 +50,7 @@ class CustomUserSerializer(BaseUserSerializer):
         many=False, slug_field='name', queryset=Semester.objects.all(), required=False, allow_null=True)
     # Use custom slug field for filtering
     subjects = SubjectSlugRelatedField(
-        many=True, slug_field='name', queryset=SubjectInstance.objects.all(), required=False)
+        many=True, slug_field='subject', queryset=SubjectInstance.objects.all(), required=False)
     avatar = Base64ImageField()
 
     class Meta(BaseUserSerializer.Meta):

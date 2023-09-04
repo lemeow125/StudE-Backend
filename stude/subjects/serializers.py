@@ -5,7 +5,8 @@ from year_levels.models import Year_Level
 from semesters.models import Semester
 
 
-class SubjectSerializer(serializers.ModelSerializer):
+class SubjectInstanceSerializer(serializers.ModelSerializer):
+    name = serializers.StringRelatedField(source='subject', read_only=True)
     year_level = serializers.SlugRelatedField(
         queryset=Subject.objects.all(), slug_field='name', allow_null=False)
     year_level = serializers.SlugRelatedField(
@@ -17,4 +18,5 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubjectInstance
-        fields = ('id', 'subject', 'code', 'course', 'year_level', 'semester')
+        fields = ('id', 'name', 'code',
+                  'course', 'year_level', 'semester')
