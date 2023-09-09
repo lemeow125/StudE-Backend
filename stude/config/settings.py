@@ -259,5 +259,6 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 19,
     'MAX_ZOOM': 20,
     'MIN_ZOOM': 3,
-    'SCALE': 'both'
+    'SCALE': 'both',
+    'TILES': 'https://openstreetmap.keannu1.duckdns.org/tile/{z}/{x}/{y}.png'
 }
