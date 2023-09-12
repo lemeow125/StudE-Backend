@@ -12,7 +12,7 @@ from semesters.models import Semester
 
 
 class Subject(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     students = models.ManyToManyField(
         CustomUser, blank=True)
 
@@ -22,7 +22,7 @@ class Subject(models.Model):
 
 class SubjectInstance(models.Model):
     subject = models.ForeignKey(
-        Subject, on_delete=models.CASCADE)
+        Subject, on_delete=models.CASCADE, to_field='name')
     code = models.CharField(max_length=16)
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE)

@@ -21,7 +21,6 @@ load_dotenv()  # loads the configs from .env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -141,11 +140,25 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+
+        'rest_framework.throttling.AnonRateThrottle',
+
+        'rest_framework.throttling.UserRateThrottle'
+
+    ],
+
+    'DEFAULT_THROTTLE_RATES': {
+
+        'anon': '360/min',
+
+        'user': '1440/min'
+
+    },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -244,5 +257,34 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 19,
     'MAX_ZOOM': 20,
     'MIN_ZOOM': 3,
-    'SCALE': 'both'
+    'SCALE': 'both',
+    'TILES': 'https://openstreetmap.keannu1.duckdns.org/tile/{z}/{x}/{y}.png'
+}
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+
+
+# Django Redis Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+# Redis Cache for Django Channel Websockets
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }
