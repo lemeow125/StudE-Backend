@@ -249,9 +249,10 @@ else:
 
 SITE_NAME = 'Stud-E'
 
+# 1 week access token lifetime
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=3600),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=3600)
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10080),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=10080)
 }
 
 LEAFLET_CONFIG = {
@@ -263,8 +264,8 @@ LEAFLET_CONFIG = {
     'TILES': 'https://openstreetmap.keannu1.duckdns.org/tile/{z}/{x}/{y}.png'
 }
 
-REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
-REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
 
 
 # Django Redis Cache
