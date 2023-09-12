@@ -6,6 +6,7 @@ from year_levels.models import Year_Level
 from semesters.models import Semester
 from courses.models import Course
 from subjects.models import SubjectInstance
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 
 class CustomUserForm(forms.ModelForm):
@@ -22,7 +23,7 @@ class CustomUserForm(forms.ModelForm):
     course = forms.ModelChoiceField(
         queryset=Course.objects.all(), required=False)
     subjects = forms.ModelMultipleChoiceField(
-        queryset=SubjectInstance.objects.none(), required=False, widget=forms.CheckboxSelectMultiple)
+        queryset=SubjectInstance.objects.none(), required=False, widget=FilteredSelectMultiple("Subjects", is_stacked=False))
     avatar = forms.ImageField(required=False)
 
     class Meta:
