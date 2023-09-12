@@ -8,12 +8,20 @@ services:
       dockerfile: Dockerfile
     image: stude_backend:latest
     ports:
-      - "8192:8000"  # Expose port 8000 for the web server
+      - "8192:8000"  # Expose port 8192 for the web server
     environment:
       - PYTHONBUFFERED=1
-    command: ["python", "stude/manage.py", "runserver"]
+    command: ["sh", "-c", "python stude/wait_for_redis.py && python stude/manage.py runserver"]
     volumes:
-      - stude:/app
+      - .:/code       # For hotreloading
+    depends_on:
+      - redis  # Add this to make sure Django can reach the Redis server
+
+  # Redis Server
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"  # Expose Redis default port
 
 volumes:
   stude:

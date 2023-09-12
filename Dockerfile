@@ -18,11 +18,14 @@ RUN apt-get update && apt-get install -y \
     gdal-bin \
     libsqlite3-mod-spatialite
 
-# Set the working directory to /app
-WORKDIR /app
+# Create directory
+RUN mkdir /code
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Set the working directory to /code
+WORKDIR /code
+
+# Mirror the current directory to the working directory for hotreloading
+ADD . /code/
 
 # Install pipenv
 RUN pip install -r linux-requirements.txt
@@ -35,6 +38,3 @@ RUN python stude/manage.py custom_migrate
 
 # Expose port 8000 for the web server
 EXPOSE 8000
-
-# Run the web server
-CMD ["python", "stude/manage.py", "runserver"]
