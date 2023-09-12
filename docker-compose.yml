@@ -11,7 +11,7 @@ services:
       - "8083:8000"  # Expose port 8083 for the web server
     environment:
       - PYTHONBUFFERED=1
-    command: ["sh", "-c", "python stude/wait_for_redis.py && python stude/manage.py runserver"]
+    command: ["sh", "-c", "python stude/manage.py custom_migrate && python stude/wait_for_redis.py && python stude/manage.py runserver"]
     volumes:
       - .:/code       # For hotreloading
     depends_on:
