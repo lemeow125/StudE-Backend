@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import generics, viewsets
 from .models import Subject, SubjectInstance
 from .serializers import SubjectInstanceSerializer
@@ -9,6 +11,10 @@ from rest_framework.permissions import IsAuthenticated
 class SubjectListAllView(generics.ListAPIView):
     serializer_class = SubjectInstanceSerializer
     queryset = SubjectInstance.objects.all()
+
+    @method_decorator(cache_page(60*60))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class SubjectListView(generics.ListAPIView):
