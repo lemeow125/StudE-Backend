@@ -5,15 +5,17 @@ from .models import CustomUser
 from year_levels.models import Year_Level
 from semesters.models import Semester
 from courses.models import Course
-from subjects.models import Subject
+from subjects.models import SubjectInstance
 
 
 class CustomUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomUserForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['subjects'].queryset = Subject.objects.filter(
-                course=self.instance.course)
+            self.fields['subjects'].queryset = SubjectInstance.objects.filter(
+                course=self.instance.course).filter(
+                year_level=self.instance.year_level).filter(
+                semester=self.instance.semester)
 
     year_level = forms.ModelChoiceField(
         queryset=Year_Level.objects.all(), required=False)
@@ -22,7 +24,7 @@ class CustomUserForm(forms.ModelForm):
     course = forms.ModelChoiceField(
         queryset=Course.objects.all(), required=False)
     subjects = forms.ModelMultipleChoiceField(
-        queryset=Subject.objects.none(), required=False, widget=forms.CheckboxSelectMultiple)
+        queryset=SubjectInstance.objects.none(), required=False, widget=forms.CheckboxSelectMultiple)
     avatar = forms.ImageField(required=False)
 
     class Meta:
