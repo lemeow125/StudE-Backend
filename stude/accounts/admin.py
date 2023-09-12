@@ -13,9 +13,7 @@ class CustomUserForm(forms.ModelForm):
         super(CustomUserForm, self).__init__(*args, **kwargs)
         if self.instance:
             self.fields['subjects'].queryset = SubjectInstance.objects.filter(
-                course=self.instance.course).filter(
-                year_level=self.instance.year_level).filter(
-                semester=self.instance.semester)
+                course=self.instance.course)
 
     year_level = forms.ModelChoiceField(
         queryset=Year_Level.objects.all(), required=False)
