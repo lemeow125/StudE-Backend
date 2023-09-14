@@ -17,17 +17,6 @@ services:
     depends_on:
       - redis  # Add this to make sure Django can reach the Redis server
 
-  redis-commander:
-    container_name: redis-commander
-    hostname: redis-commander
-    image: rediscommander/redis-commander:latest
-    build: .
-    restart: always
-    environment:
-        - REDIS_HOSTS=redis
-    ports:
-        - "8444:8081"
-
   # Redis Server
   redis:
     image: redis:latest
