@@ -6,6 +6,7 @@ from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 import api.routing
 from django.urls import re_path
+from config.auth_middleware import JwtAuthMiddlewareStack
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 # Initialize Django ASGI application early to ensure the AppRegistry
@@ -14,11 +15,9 @@ django_asgi_app = get_asgi_application()
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
-    'websocket': AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
-            URLRouter(
-                [re_path(r'ws/', URLRouter(api.routing.websocket_urlpatterns))]
-            )
+    'websocket':
+        JwtAuthMiddlewareStack(
+            URLRouter(api.routing.websocket_urlpatterns)
         ),
-    )
+
 })
