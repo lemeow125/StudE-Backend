@@ -20,7 +20,6 @@ class CustomStudentStatusForm(forms.ModelForm):
 
     subject = forms.ModelMultipleChoiceField(
         queryset=SubjectInstance.objects.none(), required=False)
-    avatar = forms.ImageField(required=False)
 
     class Meta:
         model = StudentStatus
