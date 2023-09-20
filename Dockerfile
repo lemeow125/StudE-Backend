@@ -1,7 +1,7 @@
 # Use the official Python 3.11 image
-FROM --platform=arm64 python:3.11.4-bookworm
+# FROM --platform=arm64 python:3.11.4-bookworm
 # ARG BUILDPLATFORM
-# FROM --platform=${BUILDPLATFORM} python:3.11.4-bookworm
+FROM python:3.11.4-bookworm
 
 ENV PYTHONBUFFERED 1
 
