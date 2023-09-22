@@ -51,9 +51,9 @@ class StudentStatusListByStudentStatusLocation(generics.ListAPIView):
         # Exclude user
         # Filter those only with the same subjects as the user
         # Annotate the queryset with distance to the user
-        # Then filter so that only those within 50m remain
+        # Then filter so that only those within 100m remain
         return StudentStatus.objects.exclude(user=user).filter(active=True).filter(
-            subject__name__in=user_subject_names).annotate(distance=Distance('location', user_location)).filter(distance__lte=50)
+            subject__name__in=user_subject_names).annotate(distance=Distance('location', user_location)).filter(distance__lte=100)
 
 
 class StudentStatusListByCurrentLocation(viewsets.ViewSet):
@@ -78,8 +78,8 @@ class StudentStatusListByCurrentLocation(viewsets.ViewSet):
         # Exclude user
         # Filter those only with the same subjects as the user
         # Annotate the queryset with distance to the user
-        # Then filter so that only those within 50m remain
+        # Then filter so that only those within 100m remain
         queryset = StudentStatus.objects.exclude(user=user).filter(active=True).filter(subject__name__in=user_subject_names).annotate(
-            distance=Distance('location', user_location)).filter(distance__lte=50)
+            distance=Distance('location', user_location)).filter(distance__lte=100)
         serializer = StudentStatusLocationSerializer(queryset, many=True)
         return Response(serializer.data)
