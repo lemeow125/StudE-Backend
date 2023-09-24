@@ -43,6 +43,21 @@ class StudyGroupListView(generics.ListAPIView):
         # Now fetch the StudyGroups with the matching Subject models
         studygroups = StudyGroup.objects.filter(subject__in=user_subjects)
 
+        for group in studygroups:
+            # Get all StudentStatus locations of the group
+            group_locations = group.users.values_list('location', flat=True)
+            # Convert string locations to GEOSGeometry objects
+            point_locations = [fromstr(loc, srid=4326)
+                               for loc in group_locations]
+            # Calculate distances between every pair of locations
+            distances = [(loc1.distance(
+                loc2)*100000)for loc1 in point_locations for loc2 in point_locations]
+            # Get the maximum distance
+            group_radius = max(distances) if distances else 0
+            group_radius = max(group_radius, 15)
+            # Annotate the group with the radius
+            group.radius = group_radius
+
         return studygroups
 
 
