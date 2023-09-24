@@ -72,6 +72,9 @@ class StudyGroupListNearView(generics.ListAPIView):
                 "You must be a student to view study groups"
             )
 
+        if user_status.active is False:
+            raise exceptions.ValidationError("Student Status is not active")
+
         # Get the user's course
         user_course = user.course
         print(user_course)
