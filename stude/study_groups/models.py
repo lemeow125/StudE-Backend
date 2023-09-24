@@ -13,6 +13,8 @@ class StudyGroup(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
     timestamp = models.DateField(auto_now_add=True)
+    landmark = models.ForeignKey(
+        'landmarks.Landmark', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name

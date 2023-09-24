@@ -6,9 +6,16 @@ from drf_extra_fields.geo_fields import PointField
 from landmarks.models import Landmark
 
 
+class CustomUserKeyRelatedField(serializers.PrimaryKeyRelatedField):
+
+    def to_representation(self, value):
+        # returns the string representation of the custom user (aka the name)
+        return str(value)
+
+
 class StudyGroupSerializer(serializers.ModelSerializer):
-    users = serializers.SlugRelatedField(
-        queryset=CustomUser.objects.all(), many=True, slug_field='full_name', required=False, allow_null=True)
+    users = CustomUserKeyRelatedField(
+        queryset=CustomUser.objects.all(), many=True)
     subject = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
     location = PointField()
