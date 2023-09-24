@@ -14,6 +14,7 @@ class CustomUserKeyRelatedField(serializers.PrimaryKeyRelatedField):
 
 
 class StudyGroupSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
     users = CustomUserKeyRelatedField(
         queryset=CustomUser.objects.all(), many=True)
     subject = serializers.SlugRelatedField(
@@ -21,6 +22,7 @@ class StudyGroupSerializer(serializers.ModelSerializer):
     location = PointField()
     landmark = serializers.SlugRelatedField(
         queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+    radius = serializers.FloatField()
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -40,7 +42,7 @@ class StudyGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyGroup
         fields = '__all__'
-        read_only_fields = ['landmark']
+        read_only_fields = ['landmark', 'radius']
 
 
 class StudyGroupMembershipSerializer(serializers.ModelSerializer):
