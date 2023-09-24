@@ -26,11 +26,6 @@ class StudyGroupListView(generics.ListAPIView):
                 "You must be a student to view study groups"
             )
 
-        if not user.is_student:
-            raise PermissionDenied(
-                "You must be a student to view study groups"
-            )
-
         # Get the user's course
         user_course = user.course
         print(user_course)
@@ -57,7 +52,7 @@ class StudyGroupListView(generics.ListAPIView):
             group_radius = max(group_radius, 15)
             # Annotate the group with the radius
             group.radius = group_radius
-
+        print('test', studygroups)
         return studygroups
 
 
@@ -71,9 +66,6 @@ class StudyGroupListNearView(generics.ListAPIView):
         user_status = StudentStatus.objects.filter(user=user).first()
         user_location = fromstr(
             user_status.location, srid=4326)
-
-        if user_status.active is False:
-            raise exceptions.ValidationError("Student Status is not active")
 
         if not user.is_student:
             raise PermissionDenied(
