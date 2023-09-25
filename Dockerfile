@@ -37,5 +37,8 @@ RUN python stude/manage.py makemigrations
 # Run custom migrate
 RUN python stude/manage.py custom_migrate
 
+# Generate DRF Spectacular Documentation
+RUN python stude/manage.py spectacular --color --file stude/schema.yml
+
 # Expose port 8000 for the web server
 EXPOSE 8000
