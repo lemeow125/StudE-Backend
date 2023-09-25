@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StudyGroup, StudyGroupMembership
+from .models import StudyGroup
 from accounts.models import CustomUser
 from subjects.models import Subject
 from drf_extra_fields.geo_fields import PointField
@@ -15,8 +15,7 @@ class CustomUserKeyRelatedField(serializers.PrimaryKeyRelatedField):
 
 class StudyGroupSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
-    users = CustomUserKeyRelatedField(
-        queryset=CustomUser.objects.all(), many=True)
+    students = serializers.StringRelatedField(many=True)
     subject = serializers.SlugRelatedField(
         many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
     location = PointField()
@@ -42,14 +41,4 @@ class StudyGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyGroup
         fields = '__all__'
-        read_only_fields = ['landmark', 'radius']
-
-
-class StudyGroupMembershipSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source='accounts.CustomUser', read_only=True)
-    subject = serializers.CharField(
-        source='study_groups.StudyGroup', read_only=True)
-
-    class Meta:
-        model = StudyGroupMembership
-        fields = '__all__'
+        read_only_fields = ['landmark', 'radius', 'students']

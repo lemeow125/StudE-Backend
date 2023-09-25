@@ -7,8 +7,6 @@ from django.contrib.gis.geos import Point
 
 class StudyGroup(models.Model):
     name = models.CharField(max_length=48)
-    users = models.ManyToManyField(
-        'student_status.StudentStatus', through='StudyGroupMembership')
     location = gis_models.PointField(blank=True, null=True, srid=4326)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
@@ -18,13 +16,3 @@ class StudyGroup(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class StudyGroupMembership(models.Model):
-    user = models.ForeignKey(
-        'student_status.StudentStatus', on_delete=models.CASCADE)
-    study_group = models.ForeignKey(
-        'study_groups.StudyGroup', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'StudyGroupMembership: User={self.user}, StudyGroup={self.study_group.name}'

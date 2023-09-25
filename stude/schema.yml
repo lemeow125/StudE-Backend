@@ -547,9 +547,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Landmark'
           description: ''
-  /api/v1/messages/group_messages/:
+  /api/v1/messages/:
     get:
-      operationId: api_v1_messages_group_messages_list
+      operationId: api_v1_messages_list
       tags:
       - api
       security:
@@ -564,7 +564,7 @@ paths:
                   $ref: '#/components/schemas/Message'
           description: ''
     post:
-      operationId: api_v1_messages_group_messages_create
+      operationId: api_v1_messages_create
       tags:
       - api
       requestBody:
@@ -588,14 +588,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Message'
           description: ''
-  /api/v1/messages/group_messages/{id}/:
+  /api/v1/messages/{id}/:
     get:
-      operationId: api_v1_messages_group_messages_retrieve
+      operationId: api_v1_messages_retrieve
       parameters:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this message.
         required: true
       tags:
       - api
@@ -624,6 +625,48 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Semester'
+          description: ''
+  /api/v1/student_status/filter/near_current_location/:
+    post:
+      operationId: api_v1_student_status_filter_near_current_location_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentStatusLocation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudentStatusLocation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudentStatusLocation'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentStatusLocation'
+          description: ''
+  /api/v1/student_status/filter/near_student_status:
+    get:
+      operationId: api_v1_student_status_filter_near_student_status_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentStatusLocation'
           description: ''
   /api/v1/student_status/list/:
     get:
@@ -720,14 +763,96 @@ paths:
                 items:
                   $ref: '#/components/schemas/StudyGroup'
           description: ''
-  /api/v1/study_groups/membership/:
-    get:
-      operationId: api_v1_study_groups_membership_list
+    post:
+      operationId: api_v1_study_groups_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudyGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudyGroup'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyGroup'
+          description: ''
+    put:
+      operationId: api_v1_study_groups_update
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudyGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudyGroup'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyGroup'
+          description: ''
+    patch:
+      operationId: api_v1_study_groups_partial_update
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStudyGroup'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStudyGroup'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStudyGroup'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyGroup'
+          description: ''
+    delete:
+      operationId: api_v1_study_groups_destroy
       tags:
       - api
       security:
       - jwtAuth: []
-      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/v1/study_groups/near/:
+    get:
+      operationId: api_v1_study_groups_near_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -751,7 +876,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Subject'
+                  $ref: '#/components/schemas/SubjectInstance'
           description: ''
   /api/v1/subjects/{course_slug}:
     get:
@@ -774,7 +899,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Subject'
+                  $ref: '#/components/schemas/SubjectInstance'
           description: ''
   /api/v1/subjects/{course_slug}/{year_slug}/{semester_slug}:
     get:
@@ -807,7 +932,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Subject'
+                  $ref: '#/components/schemas/SubjectInstance'
           description: ''
   /api/v1/subjects/all:
     get:
@@ -824,7 +949,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Subject'
+                  $ref: '#/components/schemas/SubjectInstance'
           description: ''
   /api/v1/year_levels/:
     get:
@@ -886,8 +1011,7 @@ components:
           title: Email address
           maxLength: 254
         student_id_number:
-          type: string
-          maxLength: 16
+          type: integer
         year_level:
           type: string
           nullable: true
@@ -913,7 +1037,6 @@ components:
         avatar:
           type: string
           format: uri
-          nullable: true
         first_name:
           type: string
           maxLength: 100
@@ -923,6 +1046,7 @@ components:
         irregular:
           type: boolean
       required:
+      - avatar
       - course_shortname
       - first_name
       - last_name
@@ -996,8 +1120,7 @@ components:
           title: Email address
           maxLength: 254
         student_id_number:
-          type: string
-          maxLength: 16
+          type: integer
         year_level:
           type: string
           nullable: true
@@ -1023,7 +1146,6 @@ components:
         avatar:
           type: string
           format: uri
-          nullable: true
         first_name:
           type: string
           maxLength: 100
@@ -1042,19 +1164,44 @@ components:
           type: string
         location:
           type: string
+        timestamp:
+          type: string
+          format: date-time
+        active:
+          type: boolean
+        study_group:
+          type: integer
+          nullable: true
         landmark:
           type: string
           nullable: true
+    PatchedStudyGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        students:
+          type: array
+          items:
+            type: string
+        subject:
+          type: string
+        location:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        radius:
+          type: number
+          format: double
         active:
           type: boolean
         timestamp:
           type: string
           format: date
-          readOnly: true
-        study_group:
-          type: array
-          items:
-            type: integer
           readOnly: true
     Semester:
       type: object
@@ -1115,25 +1262,52 @@ components:
           type: string
         location:
           type: string
+        timestamp:
+          type: string
+          format: date-time
+        active:
+          type: boolean
+        study_group:
+          type: integer
+          nullable: true
         landmark:
           type: string
           nullable: true
+      required:
+      - active
+      - location
+      - subject
+      - timestamp
+      - user
+    StudentStatusLocation:
+      type: object
+      properties:
+        user:
+          type: string
+          readOnly: true
+        location:
+          type: string
+        distance:
+          type: string
+          readOnly: true
+        subject:
+          type: string
         active:
           type: boolean
-        timestamp:
-          type: string
-          format: date
           readOnly: true
         study_group:
-          type: array
-          items:
-            type: integer
+          type: integer
           readOnly: true
+          nullable: true
+        landmark:
+          type: string
+          nullable: true
       required:
+      - active
+      - distance
       - location
       - study_group
       - subject
-      - timestamp
       - user
     StudyGroup:
       type: object
@@ -1141,11 +1315,12 @@ components:
         id:
           type: integer
           readOnly: true
-        users:
+        name:
+          type: string
+        students:
           type: array
           items:
             type: string
-            nullable: true
         subject:
           type: string
         location:
@@ -1153,9 +1328,9 @@ components:
         landmark:
           type: string
           nullable: true
-        name:
-          type: string
-          maxLength: 48
+        radius:
+          type: number
+          format: double
         active:
           type: boolean
         timestamp:
@@ -1166,9 +1341,11 @@ components:
       - id
       - location
       - name
+      - radius
+      - students
       - subject
       - timestamp
-    Subject:
+    SubjectInstance:
       type: object
       properties:
         id:
@@ -1176,7 +1353,7 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 64
+          readOnly: true
         code:
           type: string
           maxLength: 16

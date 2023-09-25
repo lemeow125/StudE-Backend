@@ -3,7 +3,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'group_messages', views.MessageViewSet,
+router.register(r'', views.MessageViewSet,
                 basename='group_messages')
 
 # Wire up our API using automatic URL routing.

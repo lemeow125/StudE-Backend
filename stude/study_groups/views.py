@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, mixins
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from .serializers import StudyGroupSerializer
@@ -11,6 +11,8 @@ from django.contrib.gis.geos import fromstr
 from django.contrib.gis.db.models.functions import Distance
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework import permissions
+
 # Create your views here.
 
 
@@ -18,45 +20,6 @@ class StudyGroupListView(generics.ListCreateAPIView, generics.UpdateAPIView, gen
     permission_classes = [IsAuthenticated]
     serializer_class = StudyGroupSerializer
     queryset = StudyGroup.objects.all()
-
-    def partial_update(self, instance, request, *args, **kwargs):
-        # Ensure only "users" field is being updated
-        if set(request.data.keys()) != {"users"}:
-            return Response({"detail": "Only the 'users' field can be updated."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Get the current list of users
-        instance = self.get_object()
-        current_users = set(instance.users.values_list('id', flat=True))
-
-        # Get the new list of users from the request
-        new_users = set(request.data['users'])
-
-        # Check if the only difference between the two sets is the current user
-        diff = current_users.symmetric_difference(new_users)
-        if len(diff) > 1 or (len(diff) == 1 and request.user.id not in diff):
-            return Response({"detail": "You can only add or remove yourself from the study group."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Delete the study group if there are no users left
-        instance = self.get_object()
-        if not instance.users.exists():
-            instance.delete()
-
-        return super().partial_update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        # Check if the current user is the creator of the study group
-        # Assuming 'date_joined' is a field in your User model
-        creator = instance.users.all().first()
-        if request.user != creator:
-            return Response({"detail": "Only the creator can delete the study group."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Check if the current user is the only one in the study group
-        if instance.users.count() > 1:
-            return Response({"detail": "The study group cannot be deleted if there are other users in it."}, status=status.HTTP_400_BAD_REQUEST)
-
-        return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
         user = self.request.user
@@ -145,6 +108,7 @@ class StudyGroupListNearView(generics.ListAPIView):
         return studygroups
 
 
-class StudyGroupMembershipViewSet(generics.ListAPIView):
-    serializer_class = StudyGroupSerializer
-    queryset = StudyGroup.objects.all()
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Check if the requesting user's student status matches the user field
+        return obj.user == request.user.studentstatus

@@ -5,7 +5,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import viewsets
 from student_status.models import StudentStatus
-from study_groups.models import StudyGroupMembership
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
@@ -15,23 +14,27 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'post']
-
-    def get_object(self):
-        user = self.request.user
-        return Message.objects.get(user=user)
+    queryset = Message.objects.all()
 
     def perform_create(self, serializer):
         user = self.request.user
-        study_group_id_list = StudyGroupMembership.objects.filter(
-            user=user.id).values_list('study_group', flat=True).first()
-        serializer.save(user=user, study_group_id=study_group_id_list)
+        user_status = StudentStatus.objects.filter(user=user).first()
+        user_study_group = user_status.study_group
+        serializer.save(user=user, study_group=user_study_group)
 
     def get_queryset(self):
         user = self.request.user
+        user_status = StudentStatus.objects.filter(user=user).first()
+        user_study_group = user_status.study_group
 
         if not user.is_student:
             raise PermissionDenied(
                 "You must be a student to view messages of your current study group"
+            )
+
+        if not user_study_group:
+            raise PermissionDenied(
+                "You are currently do not have a study group"
             )
 
         # Get student_status id of the current user
@@ -41,15 +44,9 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         print("User ID:", user.id)
         print("Student_Status ID:", student_status)
-
-        # Get the study group id
-        print(StudyGroupMembership.objects.all())
-        study_group_id_list = StudyGroupMembership.objects.filter(
-            user=user.id).values_list('study_group').first()
-
-        print("Study Group List:", study_group_id_list)
+        print("User Study Group:", user_study_group)
 
         # Now fetch the Messages matching the study group id
         messages = Message.objects.filter(
-            study_group=study_group_id_list).order_by('-timestamp')
+            study_group=user_study_group).order_by('-timestamp')
         return messages

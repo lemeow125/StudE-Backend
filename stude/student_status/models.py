@@ -16,8 +16,8 @@ class StudentStatus(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     landmark = models.ForeignKey(
         'landmarks.Landmark', on_delete=models.SET_NULL, null=True)
-    study_group = models.ManyToManyField(
-        'study_groups.StudyGroup', through='study_groups.StudyGroupMembership', blank=True)
+    study_group = models.ForeignKey(
+        'study_groups.StudyGroup', on_delete=models.SET_NULL, null=True, related_name='students')
 
     def __str__(self):
         return self.user.full_name
