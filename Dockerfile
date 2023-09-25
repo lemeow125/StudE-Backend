@@ -29,7 +29,7 @@ WORKDIR /code
 ADD . /code/
 
 # Install pipenv
-RUN pip install -r linux-requirements.txt
+RUN pip install --no-cache-dir -r linux-requirements.txt
 
 # Make migrations
 RUN python stude/manage.py makemigrations
