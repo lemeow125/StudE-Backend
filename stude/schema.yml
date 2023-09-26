@@ -763,21 +763,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/StudyGroup'
           description: ''
+  /api/v1/study_groups/create//:
     post:
-      operationId: api_v1_study_groups_create
+      operationId: api_v1_study_groups_create_create
       tags:
       - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StudyGroup'
+              $ref: '#/components/schemas/StudyGroupCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/StudyGroup'
+              $ref: '#/components/schemas/StudyGroupCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/StudyGroup'
+              $ref: '#/components/schemas/StudyGroupCreate'
         required: true
       security:
       - jwtAuth: []
@@ -786,48 +787,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudyGroup'
+                $ref: '#/components/schemas/StudyGroupCreate'
           description: ''
-    put:
-      operationId: api_v1_study_groups_update
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StudyGroup'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/StudyGroup'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/StudyGroup'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StudyGroup'
-          description: ''
+  /api/v1/study_groups/create//{id}/:
     patch:
-      operationId: api_v1_study_groups_partial_update
+      operationId: api_v1_study_groups_create_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this study group.
+        required: true
       tags:
       - api
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedStudyGroup'
+              $ref: '#/components/schemas/PatchedStudyGroupCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedStudyGroup'
+              $ref: '#/components/schemas/PatchedStudyGroupCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedStudyGroup'
+              $ref: '#/components/schemas/PatchedStudyGroupCreate'
       security:
       - jwtAuth: []
       responses:
@@ -835,10 +819,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudyGroup'
+                $ref: '#/components/schemas/StudyGroupCreate'
           description: ''
     delete:
-      operationId: api_v1_study_groups_destroy
+      operationId: api_v1_study_groups_create_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this study group.
+        required: true
       tags:
       - api
       security:
@@ -1175,7 +1166,7 @@ components:
         landmark:
           type: string
           nullable: true
-    PatchedStudyGroup:
+    PatchedStudyGroupCreate:
       type: object
       properties:
         id:
@@ -1187,6 +1178,9 @@ components:
           type: array
           items:
             type: string
+            description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+              only.
+            nullable: true
         subject:
           type: string
         location:
@@ -1194,9 +1188,6 @@ components:
         landmark:
           type: string
           nullable: true
-        radius:
-          type: number
-          format: double
         active:
           type: boolean
         timestamp:
@@ -1342,6 +1333,41 @@ components:
       - location
       - name
       - radius
+      - students
+      - subject
+      - timestamp
+    StudyGroupCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        students:
+          type: array
+          items:
+            type: string
+            description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+              only.
+            nullable: true
+        subject:
+          type: string
+        location:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        active:
+          type: boolean
+        timestamp:
+          type: string
+          format: date
+          readOnly: true
+      required:
+      - id
+      - location
+      - name
       - students
       - subject
       - timestamp

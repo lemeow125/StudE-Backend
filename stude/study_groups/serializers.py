@@ -23,10 +23,33 @@ class StudyGroupSerializer(serializers.ModelSerializer):
         queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
     radius = serializers.FloatField()
 
+    class Meta:
+        model = StudyGroup
+        fields = '__all__'
+        read_only_fields = ['landmark', 'radius', 'students']
+
+
+class FullNameSlugRelatedField(serializers.SlugRelatedField):
+    def to_representation(self, instance):
+        return instance.full_name
+
+
+class StudyGroupCreateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    subject = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
+    location = PointField()
+    landmark = serializers.SlugRelatedField(
+        queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+
     def create(self, validated_data):
         user = self.context['request'].user
         study_group = StudyGroup.objects.create(
-            users=[user], defaults=validated_data)
+            name=validated_data['name'], location=validated_data['location'], subject=validated_data['subject'])
+        for landmark in Landmark.objects.all():
+            if landmark.location.contains(validated_data['location']):
+                validated_data['landmark'] = landmark
+                break
         validated_data['location'].read_only = True
         return study_group
 
@@ -41,4 +64,4 @@ class StudyGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyGroup
         fields = '__all__'
-        read_only_fields = ['landmark', 'radius', 'students']
+        read_only_fields = ['landmark']

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, mixins
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from .serializers import StudyGroupSerializer
+from .serializers import StudyGroupSerializer, StudyGroupCreateSerializer
 from .models import StudyGroup
 from subjects.models import Subject, SubjectInstance
 from student_status.models import StudentStatus
@@ -16,7 +16,14 @@ from rest_framework import permissions
 # Create your views here.
 
 
-class StudyGroupListView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+class StudyGroupCreateView(viewsets.ModelViewSet):
+    http_method_names = ['patch', 'post', 'delete']
+    permission_classes = [IsAuthenticated]
+    serializer_class = StudyGroupCreateSerializer
+    queryset = StudyGroup.objects.all()
+
+
+class StudyGroupListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = StudyGroupSerializer
     queryset = StudyGroup.objects.all()
