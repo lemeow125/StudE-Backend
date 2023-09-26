@@ -39,7 +39,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
             validated_data['location'] = Point(0, 0)
             validated_data['subject'] = None
             validated_data['landmark'] = None
-            validated_data['study_group'] = []
+            validated_data['study_group'] = None
         else:
             if 'subject' not in validated_data:
                 raise serializers.ValidationError(
