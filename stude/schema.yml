@@ -763,7 +763,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/StudyGroup'
           description: ''
-  /api/v1/study_groups/create//:
+  /api/v1/study_groups/create/:
     post:
       operationId: api_v1_study_groups_create_create
       tags:
@@ -789,7 +789,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudyGroupCreate'
           description: ''
-  /api/v1/study_groups/create//{id}/:
+  /api/v1/study_groups/create/{id}/:
     patch:
       operationId: api_v1_study_groups_create_partial_update
       parameters:
@@ -1174,13 +1174,6 @@ components:
           readOnly: true
         name:
           type: string
-        students:
-          type: array
-          items:
-            type: string
-            description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-              only.
-            nullable: true
         subject:
           type: string
         location:
@@ -1188,8 +1181,6 @@ components:
         landmark:
           type: string
           nullable: true
-        active:
-          type: boolean
         timestamp:
           type: string
           format: date
@@ -1322,8 +1313,6 @@ components:
         radius:
           type: number
           format: double
-        active:
-          type: boolean
         timestamp:
           type: string
           format: date
@@ -1344,13 +1333,6 @@ components:
           readOnly: true
         name:
           type: string
-        students:
-          type: array
-          items:
-            type: string
-            description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-              only.
-            nullable: true
         subject:
           type: string
         location:
@@ -1358,8 +1340,6 @@ components:
         landmark:
           type: string
           nullable: true
-        active:
-          type: boolean
         timestamp:
           type: string
           format: date
@@ -1368,7 +1348,6 @@ components:
       - id
       - location
       - name
-      - students
       - subject
       - timestamp
     SubjectInstance:

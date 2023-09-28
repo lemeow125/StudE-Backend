@@ -50,10 +50,11 @@ class StudyGroupListView(generics.ListAPIView):
 
         for group in studygroups:
             # Get all StudentStatus locations of the group
-            group_locations = group.users.values_list('location', flat=True)
+            group_locations = group.students.values_list('location', flat=True)
             # Convert string locations to GEOSGeometry objects
             point_locations = [fromstr(loc, srid=4326)
                                for loc in group_locations]
+
             # Calculate distances between every pair of locations
             distances = [(loc1.distance(
                 loc2)*100000)for loc1 in point_locations for loc2 in point_locations]
@@ -99,7 +100,7 @@ class StudyGroupListNearView(generics.ListAPIView):
 
         for group in studygroups:
             # Get all StudentStatus locations of the group
-            group_locations = group.users.values_list('location', flat=True)
+            group_locations = group.students.values_list('location', flat=True)
             # Convert string locations to GEOSGeometry objects
             point_locations = [fromstr(loc, srid=4326)
                                for loc in group_locations]
