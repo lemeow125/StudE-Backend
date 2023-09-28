@@ -23,7 +23,7 @@ class CustomStudentStatusForm(forms.ModelForm):
             # Filter the Subject objects by these names
             subjects = Subject.objects.filter(name__in=subject_instance_names)
             self.fields['subject'].queryset = subjects
-
+    # To fix: study group is still empty despite student already joined one
     subject = forms.ModelChoiceField(
         queryset=Subject.objects.none(), required=False)
 

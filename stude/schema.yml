@@ -1161,7 +1161,7 @@ components:
         active:
           type: boolean
         study_group:
-          type: integer
+          type: string
           nullable: true
         landmark:
           type: string
@@ -1250,7 +1250,7 @@ components:
         active:
           type: boolean
         study_group:
-          type: integer
+          type: string
           nullable: true
         landmark:
           type: string
@@ -1278,8 +1278,7 @@ components:
           type: boolean
           readOnly: true
         study_group:
-          type: integer
-          readOnly: true
+          type: string
           nullable: true
         landmark:
           type: string
@@ -1288,7 +1287,6 @@ components:
       - active
       - distance
       - location
-      - study_group
       - subject
       - user
     StudyGroup:

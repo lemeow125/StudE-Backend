@@ -55,10 +55,11 @@ class StudyGroupCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Check each landmark to see if our location is within it
-        for landmark in Landmark.objects.all():
-            if landmark.location.contains(validated_data['location']):
-                validated_data['landmark'] = landmark
-                break
+        if ('location' in validated_data):
+            for landmark in Landmark.objects.all():
+                if landmark.location.contains(validated_data['location']):
+                    validated_data['landmark'] = landmark
+                    break
         return super().update(instance, validated_data)
 
     class Meta:

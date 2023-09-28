@@ -6,7 +6,7 @@ from django.contrib.gis.geos import Point
 
 
 class StudyGroup(models.Model):
-    name = models.CharField(max_length=48)
+    name = models.CharField(max_length=48, unique=True)
     location = gis_models.PointField(blank=True, null=True, srid=4326)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     timestamp = models.DateField(auto_now_add=True)

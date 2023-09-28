@@ -31,11 +31,6 @@ class StudyGroupListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        if not user.is_student:
-            raise PermissionDenied(
-                "You must be a student to view study groups"
-            )
-
         # Get the user's course
         user_course = user.course
         print(user_course)
@@ -72,18 +67,15 @@ class StudyGroupListNearView(generics.ListAPIView):
     queryset = StudyGroup.objects.all()
 
     def get_queryset(self):
+
         user = self.request.user
         user_status = StudentStatus.objects.filter(user=user).first()
-        user_location = fromstr(
-            user_status.location, srid=4326)
-
-        if not user.is_student:
-            raise PermissionDenied(
-                "You must be a student to view study groups"
-            )
 
         if user_status.active is False:
             raise exceptions.ValidationError("Student Status is not active")
+
+        user_location = fromstr(
+            user_status.location, srid=4326)
 
         # Get the user's course
         user_course = user.course

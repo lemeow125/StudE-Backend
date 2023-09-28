@@ -4,6 +4,7 @@ from subjects.models import Subject
 from django.contrib.gis.geos import Point
 from drf_extra_fields.geo_fields import PointField
 from landmarks.models import Landmark
+from study_groups.models import StudyGroup
 
 
 class StudentStatusSerializer(serializers.ModelSerializer):
@@ -16,6 +17,8 @@ class StudentStatusSerializer(serializers.ModelSerializer):
 
     timestamp = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     active = serializers.BooleanField(required=True)
+    study_group = serializers.SlugRelatedField(queryset=StudyGroup.objects.all(
+    ), many=False, slug_field='name', required=False, allow_null=True)
 
     class Meta:
         model = StudentStatus
@@ -40,7 +43,7 @@ class StudentStatusSerializer(serializers.ModelSerializer):
             validated_data['subject'] = None
             validated_data['landmark'] = None
             validated_data['study_group'] = None
-        else:
+        elif ('active' in validated_data):
             if 'subject' not in validated_data:
                 raise serializers.ValidationError(
                     {'subject': 'This field may not be empty if active is true'})
@@ -62,6 +65,8 @@ class StudentStatusLocationSerializer(serializers.ModelSerializer):
     distance = serializers.SerializerMethodField()
     landmark = serializers.SlugRelatedField(
         queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+    study_group = serializers.SlugRelatedField(queryset=StudyGroup.objects.all(
+    ), many=False, slug_field='name', required=False, allow_null=True)
 
     class Meta:
         model = StudentStatus
