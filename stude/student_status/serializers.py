@@ -35,26 +35,39 @@ class StudentStatusSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         active = validated_data.get('active', None)
-        subject = validated_data.get('subject', None)
-        print('=====', subject, '======')
-        # If status is set as false in the request, clear the student status
+        # If status is set as false in PATCH, clear the student status
         if active is False:
             validated_data['location'] = Point(0, 0)
             validated_data['subject'] = None
             validated_data['landmark'] = None
             validated_data['study_group'] = None
-        elif ('active' in validated_data):
+        # If status is set as true in PATCH
+        elif active is True:
+            # Check if subject is attached in PATCH, if not return error
             if 'subject' not in validated_data:
                 raise serializers.ValidationError(
                     {'subject': 'This field may not be empty if active is true'})
-            # To-do: Add geofencing to ensure locations are always within USTP
-            # Check each landmark to see if our location is within it
+            # Then check the location if it matches any landmarks
             for landmark in Landmark.objects.all():
                 if landmark.location.contains(validated_data['location']):
                     validated_data['landmark'] = landmark
                     break
 
-        return super().update(instance, validated_data)
+        # Get new value for study group in PATCH
+        study_group = validated_data.get('study_group', None)
+        # Get old value in db
+        old_study_group = instance.study_group
+
+        # Commit changes
+        instance = super().update(instance, validated_data)
+
+        # If student has left study group, check if the old study_group no longer has any students
+        if study_group is None and old_study_group is not None:
+            if not old_study_group.students.exists():
+                # If there are no students left in the old StudyGroup, delete it
+                old_study_group.delete()
+
+        return instance
 
 
 class StudentStatusLocationSerializer(serializers.ModelSerializer):
