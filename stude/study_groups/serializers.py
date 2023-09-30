@@ -4,6 +4,16 @@ from accounts.models import CustomUser
 from subjects.models import Subject
 from drf_extra_fields.geo_fields import PointField
 from landmarks.models import Landmark
+from drf_extra_fields.fields import Base64ImageField
+from djoser.serializers import UserSerializer as BaseUserSerializer
+
+
+class CustomUserAvatarSerializer(BaseUserSerializer):
+    avatar = Base64ImageField()
+
+    class Meta(BaseUserSerializer.Meta):
+        model = CustomUser
+        fields = ['avatar', 'username']
 
 
 class CustomUserKeyRelatedField(serializers.PrimaryKeyRelatedField):
@@ -11,6 +21,21 @@ class CustomUserKeyRelatedField(serializers.PrimaryKeyRelatedField):
     def to_representation(self, value):
         # returns the string representation of the custom user (aka the name)
         return str(value)
+
+
+class StudyGroupDetailSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    students = serializers.StringRelatedField(many=True)
+    subject = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
+    location = PointField()
+    landmark = serializers.SlugRelatedField(
+        queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+
+    class Meta:
+        model = StudyGroup
+        fields = '__all__'
+        read_only_fields = ['landmark', 'radius', 'students', 'distance']
 
 
 class StudyGroupSerializer(serializers.ModelSerializer):

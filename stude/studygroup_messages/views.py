@@ -48,5 +48,5 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         # Now fetch the Messages matching the study group id
         messages = Message.objects.filter(
-            study_group=user_study_group).order_by('-timestamp')
+            study_group=user_study_group).order_by('timestamp')
         return messages

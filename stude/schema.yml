@@ -135,7 +135,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this user.
+        description: A unique integer value identifying this custom user.
         required: true
       tags:
       - api
@@ -155,7 +155,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this user.
+        description: A unique integer value identifying this custom user.
         required: true
       tags:
       - api
@@ -187,7 +187,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this user.
+        description: A unique integer value identifying this custom user.
         required: true
       tags:
       - api
@@ -218,7 +218,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this user.
+        description: A unique integer value identifying this custom user.
         required: true
       tags:
       - api
@@ -763,6 +763,26 @@ paths:
                 items:
                   $ref: '#/components/schemas/StudyGroup'
           description: ''
+  /api/v1/study_groups/{name}/:
+    get:
+      operationId: api_v1_study_groups_retrieve
+      parameters:
+      - in: path
+        name: name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyGroupDetail'
+          description: ''
   /api/v1/study_groups/create/:
     post:
       operationId: api_v1_study_groups_create_create
@@ -851,7 +871,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/StudyGroup'
+                  $ref: '#/components/schemas/StudyGroupDistance'
           description: ''
   /api/v1/subjects/:
     get:
@@ -1068,21 +1088,18 @@ components:
           readOnly: true
         user:
           type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
         study_group:
           type: string
         message_content:
           type: string
-          maxLength: 1024
         timestamp:
           type: string
           format: date-time
-          readOnly: true
       required:
       - id
       - message_content
-      - study_group
-      - timestamp
-      - user
     PasswordResetConfirm:
       type: object
       properties:
@@ -1346,6 +1363,75 @@ components:
       - id
       - location
       - name
+      - subject
+      - timestamp
+    StudyGroupDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        students:
+          type: array
+          items:
+            type: string
+        subject:
+          type: string
+        location:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date
+          readOnly: true
+      required:
+      - id
+      - location
+      - name
+      - students
+      - subject
+      - timestamp
+    StudyGroupDistance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        students:
+          type: array
+          items:
+            type: string
+        subject:
+          type: string
+        location:
+          type: string
+        landmark:
+          type: string
+          nullable: true
+        radius:
+          type: number
+          format: double
+        distance:
+          type: string
+          readOnly: true
+          default: 0
+        timestamp:
+          type: string
+          format: date
+          readOnly: true
+      required:
+      - distance
+      - id
+      - location
+      - name
+      - radius
+      - students
       - subject
       - timestamp
     SubjectInstance:
