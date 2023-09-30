@@ -626,9 +626,41 @@ paths:
                 items:
                   $ref: '#/components/schemas/Semester'
           description: ''
-  /api/v1/student_status/filter/near_current_location/:
+  /api/v1/student_status/list/:
+    get:
+      operationId: api_v1_student_status_list_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentStatus'
+          description: ''
+  /api/v1/student_status/near/:
+    get:
+      operationId: api_v1_student_status_near_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentStatusLocation'
+          description: ''
+  /api/v1/student_status/near_current_location//:
     post:
-      operationId: api_v1_student_status_filter_near_current_location_create
+      operationId: api_v1_student_status_near_current_location_create
       tags:
       - api
       requestBody:
@@ -651,38 +683,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentStatusLocation'
-          description: ''
-  /api/v1/student_status/filter/near_student_status:
-    get:
-      operationId: api_v1_student_status_filter_near_student_status_list
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StudentStatusLocation'
-          description: ''
-  /api/v1/student_status/list/:
-    get:
-      operationId: api_v1_student_status_list_list
-      tags:
-      - api
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StudentStatus'
           description: ''
   /api/v1/student_status/self/:
     get:

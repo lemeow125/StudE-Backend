@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, mixins
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from .serializers import StudyGroupSerializer, StudyGroupCreateSerializer
+from .serializers import StudyGroupSerializer, StudyGroupCreateSerializer, StudyGroupDistanceSerializer
 from .models import StudyGroup
 from subjects.models import Subject, SubjectInstance
 from student_status.models import StudentStatus
@@ -63,7 +63,7 @@ class StudyGroupListView(generics.ListAPIView):
 
 class StudyGroupListNearView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = StudyGroupSerializer
+    serializer_class = StudyGroupDistanceSerializer
     queryset = StudyGroup.objects.all()
 
     def get_queryset(self):

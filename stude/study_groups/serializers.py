@@ -26,7 +26,34 @@ class StudyGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudyGroup
         fields = '__all__'
-        read_only_fields = ['landmark', 'radius', 'students']
+        read_only_fields = ['landmark', 'radius', 'students', 'distance']
+
+
+class StudyGroupDistanceSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    students = serializers.StringRelatedField(many=True)
+    subject = serializers.SlugRelatedField(
+        many=False, slug_field='name', queryset=Subject.objects.all(), required=True, allow_null=False)
+    location = PointField()
+    landmark = serializers.SlugRelatedField(
+        queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
+    radius = serializers.FloatField()
+    distance = serializers.SerializerMethodField(default=0)
+
+    class Meta:
+        model = StudyGroup
+        fields = '__all__'
+        read_only_fields = ['landmark', 'radius', 'students', 'distance']
+
+    def get_distance(self, obj):
+        if hasattr(obj, 'distance'):
+            return obj.distance.km
+        return 0
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['distance'] = self.get_distance(instance)
+        return representation
 
 
 class FullNameSlugRelatedField(serializers.SlugRelatedField):
