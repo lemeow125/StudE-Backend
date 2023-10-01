@@ -135,7 +135,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this custom user.
+        description: A unique integer value identifying this user.
         required: true
       tags:
       - api
@@ -155,7 +155,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this custom user.
+        description: A unique integer value identifying this user.
         required: true
       tags:
       - api
@@ -187,7 +187,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this custom user.
+        description: A unique integer value identifying this user.
         required: true
       tags:
       - api
@@ -218,7 +218,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this custom user.
+        description: A unique integer value identifying this user.
         required: true
       tags:
       - api
@@ -857,6 +857,22 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/study_groups/member_avatars/:
+    get:
+      operationId: api_v1_study_groups_member_avatars_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomUserAvatar'
+          description: ''
   /api/v1/study_groups/near/:
     get:
       operationId: api_v1_study_groups_near_list
@@ -1065,6 +1081,20 @@ components:
       - student_id_number
       - username
       - yearlevel_shortname
+    CustomUserAvatar:
+      type: object
+      properties:
+        avatar:
+          type: string
+          format: uri
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+      required:
+      - avatar
+      - username
     Landmark:
       type: object
       properties:
