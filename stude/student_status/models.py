@@ -8,7 +8,7 @@ from django.dispatch import receiver
 
 class StudentStatus(models.Model):
     user = models.OneToOneField(
-        CustomUser, on_delete=models.CASCADE, primary_key=True)
+        CustomUser, on_delete=models.CASCADE, unique=True)
     location = gis_models.PointField(blank=True, null=True, srid=4326)
     subject = models.ForeignKey(
         'subjects.Subject', on_delete=models.SET_NULL, null=True, to_field='name')

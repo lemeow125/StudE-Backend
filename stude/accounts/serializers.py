@@ -155,10 +155,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        StudentStatus.objects.create(
+        StudentStatus.objects.update_or_create(
             user=user,
-            active=False,
-            location=Point(0, 0),
-            subject=None
+            defaults={
+                'active': False,
+                'location': Point(0, 0),
+                'subject': None
+            }
         )
         return user
