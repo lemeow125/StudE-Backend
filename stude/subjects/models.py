@@ -68,7 +68,7 @@ def populate_subjects(sender, **kwargs):
                     # Definitions of subjects to ignore
                     ignored_subject_codes = ['NSTP', 'ROTC', 'CWTS', 'LTS']
                     ignored_subject_names = [
-                        'PRACTICUM', 'On the Job Training', 'CAPSTONE', 'Capstone']
+                        'PRACTICUM', 'On the Job Training', 'CAPSTONE', 'Capstone', 'Thesis Writing']
 
                     # Skip ignored subjects
                     if any(ignored_code in subject_code for ignored_code in ignored_subject_codes):
