@@ -9,7 +9,7 @@ class StudyGroup(models.Model):
     name = models.CharField(max_length=48, unique=True)
     location = gis_models.PointField(blank=True, null=True, srid=4326)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    timestamp = models.DateField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     landmark = models.ForeignKey(
         'landmarks.Landmark', on_delete=models.SET_NULL, null=True)
 
