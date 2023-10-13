@@ -35,6 +35,7 @@ class Command(BaseCommand):
         # Set the fields of the old statuses to the required values
         for status in old_statuses:
             logger.info(f'Resetting StudentStatus: {status}')
+            status.active = False
             status.location = Point(0, 0)
             status.subject = None
             status.landmark = None

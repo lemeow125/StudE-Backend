@@ -4,8 +4,10 @@ from leaflet.admin import LeafletGeoAdmin
 from django import forms
 from subjects.models import SubjectInstance, Subject
 from accounts.models import CustomUser
+from django.contrib.gis.geos import Point
 
 
+# Unused. To reimplement down the line
 class CustomStudentStatusForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomStudentStatusForm, self).__init__(*args, **kwargs)
@@ -23,9 +25,8 @@ class CustomStudentStatusForm(forms.ModelForm):
             # Filter the Subject objects by these names
             subjects = Subject.objects.filter(name__in=subject_instance_names)
             self.fields['subject'].queryset = subjects
-    # To fix: study group is still empty despite student already joined one
     subject = forms.ModelChoiceField(
-        queryset=Subject.objects.none(), required=False)
+        queryset=Subject.objects.all(), required=False)
 
     class Meta:
         model = StudentStatus
@@ -34,12 +35,20 @@ class CustomStudentStatusForm(forms.ModelForm):
 
 class StudentStatusAdmin(LeafletGeoAdmin):
     model = StudentStatus
-    form = CustomStudentStatusForm
     # define which fields are required
+
+    def save_model(self, request, obj, form, change):
+        if obj.active is False:
+            obj.location = Point(0, 0)
+            obj.subject = None
+            obj.landmark = None
+            obj.study_group = None
+        super().save_model(request, obj, form, change)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(StudentStatusAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['landmark'].required = False
+        form.base_fields['study_group'].required = False
         return form
 
 
