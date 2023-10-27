@@ -89,20 +89,21 @@ class StudyGroupListView(generics.ListAPIView):
         studygroups = StudyGroup.objects.filter(subject__in=user_subjects)
 
         for group in studygroups:
-            # Get all StudentStatus locations of the group
-            group_locations = group.students.values_list('location', flat=True)
-            # Convert string locations to GEOSGeometry objects
-            point_locations = [fromstr(loc, srid=4326)
-                               for loc in group_locations]
+            # Get the number of students in a group
+            student_count = group.students.values_list(
+                'user', flat=True).count()
+            # Each student will contribute 10 to the radius
+            radius = student_count * 10
 
-            # Calculate distances between every pair of locations
-            distances = [(loc1.distance(
-                loc2)*100000)for loc1 in point_locations for loc2 in point_locations]
-            # Get the maximum distance
-            group_radius = max(distances) if distances else 0
-            group_radius = max(group_radius, 15)
+            # If the radius exceeds 50, set it back to 50
+            if (radius > 50):
+                radius = 50
+            # (For debug purposes) If radius is less than 5, set it back to 5
+            elif (radius < 5):
+                radius = 5
             # Annotate the group with the radius
-            group.radius = group_radius
+            group.radius = radius
+
         return studygroups
 
 
