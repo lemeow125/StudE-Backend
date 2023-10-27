@@ -67,6 +67,12 @@ class StudentStatusSerializer(serializers.ModelSerializer):
                 # If there are no students left in the old StudyGroup, delete it
                 old_study_group.delete()
 
+        # If student has changed study group, check if the old study_group no longer has any students
+        if study_group is not old_study_group and old_study_group is not None:
+            if not old_study_group.students.exists():
+                # If there are no students left in the old StudyGroup, delete it
+                old_study_group.delete()
+
         return instance
 
 
