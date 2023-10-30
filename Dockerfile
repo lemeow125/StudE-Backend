@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y \
     libspatialite-dev \
     gdal-bin \
     libsqlite3-mod-spatialite \
-    cron \
     vim
 
 # Create directory
@@ -41,24 +40,6 @@ RUN python stude/manage.py custom_migrate
 
 # Generate DRF Spectacular Documentation
 RUN python stude/manage.py spectacular --color --file stude/schema.yml
-
-# Copy the cronjob file
-COPY cronjob /etc/cron.d/cronjob
-
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/cronjob
-
-# Apply cron job
-RUN crontab /etc/cron.d/cronjob
-
-# Create the log file to be able to run tail
-RUN touch /var/log/cron.log
-
-# Set editor as VIM
-RUN export EDITOR=vim
-
-# Run the command on container startup
-CMD cron
 
 # Expose port 8000 for the web server
 EXPOSE 8000
