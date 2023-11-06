@@ -16,18 +16,16 @@ class Command(BaseCommand):
         now = timezone.now()
 
         # Get the time 8 hours ago
-        time_threshold = now - timezone.timedelta(hours=4)
+        time_threshold = now - timezone.timedelta(hours=8)
 
         # Get StudyGroup entries older than 8 hours
         old_groups = StudyGroup.objects.filter(timestamp__lt=time_threshold)
 
-        # Log the old groups
+        # Log the old groups and delete them
         for group in old_groups:
+            group.delete()
             self.stdout.write(self.style.SUCCESS(
                 f'Deleting StudyGroup: {group}'))
-
-        # Delete the old groups
-        old_groups.delete()
 
         # Get StudentStatus entries older than 8 hours
         old_statuses = StudentStatus.objects.filter(active=True).filter(
