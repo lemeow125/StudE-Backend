@@ -101,6 +101,8 @@ class StudyGroupCreateSerializer(serializers.ModelSerializer):
         for landmark in Landmark.objects.all():
             if landmark.location.contains(validated_data['location']):
                 validated_data['landmark'] = landmark
+                study_group.landmark = landmark
+                study_group.save()
                 break
         validated_data['location'].read_only = True
         return study_group
