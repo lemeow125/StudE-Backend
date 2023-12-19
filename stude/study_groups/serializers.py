@@ -71,9 +71,7 @@ class StudyGroupDistanceSerializer(serializers.ModelSerializer):
         read_only_fields = ['landmark', 'radius', 'students', 'distance']
 
     def get_distance(self, obj):
-        if hasattr(obj, 'distance'):
-            return obj.distance.km
-        return 0
+        return 30
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

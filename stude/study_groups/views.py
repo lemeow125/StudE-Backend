@@ -88,22 +88,6 @@ class StudyGroupListView(generics.ListAPIView):
         # Now fetch the StudyGroups with the matching Subject models
         studygroups = StudyGroup.objects.filter(subject__in=user_subjects)
 
-        for group in studygroups:
-            # Get the number of students in a group
-            student_count = group.students.values_list(
-                'user', flat=True).count()
-            # Each student will contribute 10 to the radius
-            radius = student_count * 10
-
-            # If the radius exceeds 50, set it back to 50
-            if (radius > 50):
-                radius = 50
-            # (For debug purposes) If radius is less than 5, set it back to 5
-            elif (radius < 5):
-                radius = 5
-            # Annotate the group with the radius
-            group.radius = radius
-
         return studygroups
 
 
@@ -135,22 +119,6 @@ class StudyGroupListNearView(generics.ListAPIView):
         # Now fetch the StudyGroups with the matching Subject models that are within 100m
         studygroups = StudyGroup.objects.filter(subject__in=user_subjects).annotate(
             distance=Distance('location', user_location)).filter(distance__lte=100)
-
-        for group in studygroups:
-            # Get the number of students in a group
-            student_count = group.students.values_list(
-                'user', flat=True).count()
-            # Each student will contribute 10 to the radius
-            radius = student_count * 10
-
-            # If the radius exceeds 50, set it back to 50
-            if (radius > 50):
-                radius = 50
-            # (For debug purposes) If radius is less than 5, set it back to 5
-            elif (radius < 5):
-                radius = 5
-            # Annotate the group with the radius
-            group.radius = radius
         return studygroups
 
 
