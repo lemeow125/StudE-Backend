@@ -70,12 +70,9 @@ class StudyGroupDistanceSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['landmark', 'radius', 'students', 'distance']
 
-    def get_distance(self, obj):
-        return 30
-
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['distance'] = self.get_distance(instance)
+        representation['distance'] = 30
         return representation
 
 
