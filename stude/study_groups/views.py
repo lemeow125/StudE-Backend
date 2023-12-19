@@ -120,9 +120,6 @@ class StudyGroupListNearView(generics.ListAPIView):
         studygroups = StudyGroup.objects.filter(subject__in=user_subjects).annotate(
             distance=Distance('location', user_location)).filter(distance__lte=100)
 
-        for group in studygroups:
-            # Annotate the group with the radius
-            group.radius = 30
         return studygroups
 
 

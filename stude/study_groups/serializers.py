@@ -62,7 +62,6 @@ class StudyGroupDistanceSerializer(serializers.ModelSerializer):
     location = PointField()
     landmark = serializers.SlugRelatedField(
         queryset=Landmark.objects.all(), many=False, slug_field='name', required=False, allow_null=True)
-    radius = serializers.FloatField()
     distance = serializers.SerializerMethodField(default=0)
 
     class Meta:
@@ -77,7 +76,8 @@ class StudyGroupDistanceSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['distance'] = 10
+        representation['distance'] = self.get_distance(instance)
+        representation['radius'] = 15
         return representation
 
 
