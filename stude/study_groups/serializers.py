@@ -77,7 +77,7 @@ class StudyGroupDistanceSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['distance'] = 30
+        representation['distance'] = 10
         return representation
 
 
