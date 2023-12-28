@@ -1,12 +1,13 @@
 # Use the official Python 3.11 image
-# FROM --platform=arm64 python:3.11.4-bookworm
+FROM --platform=arm64 python:3.11.7-bullseye
 # ARG BUILDPLATFORM
-FROM python:3.11.4-bookworm
+# FROM python:3.11.7-bullseye
 
 ENV PYTHONBUFFERED 1
 
+RUN apt-get update 
 # Install necessary dependencies, including cmake
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
     wget \
     tar \
     cmake \

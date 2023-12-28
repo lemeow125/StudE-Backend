@@ -1230,7 +1230,7 @@ components:
           nullable: true
         timestamp:
           type: string
-          format: date
+          format: date-time
           readOnly: true
     Semester:
       type: object
@@ -1360,7 +1360,7 @@ components:
           format: double
         timestamp:
           type: string
-          format: date
+          format: date-time
           readOnly: true
       required:
       - id
@@ -1387,7 +1387,7 @@ components:
           nullable: true
         timestamp:
           type: string
-          format: date
+          format: date-time
           readOnly: true
       required:
       - id
@@ -1416,7 +1416,7 @@ components:
           nullable: true
         timestamp:
           type: string
-          format: date
+          format: date-time
           readOnly: true
       required:
       - id
@@ -1444,23 +1444,19 @@ components:
         landmark:
           type: string
           nullable: true
-        radius:
-          type: number
-          format: double
         distance:
           type: string
           readOnly: true
           default: 0
         timestamp:
           type: string
-          format: date
+          format: date-time
           readOnly: true
       required:
       - distance
       - id
       - location
       - name
-      - radius
       - students
       - subject
       - timestamp
