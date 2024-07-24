@@ -1,5 +1,5 @@
 # Use the official Python 3.11 image
-FROM --platform=arm64 python:3.11.7-bullseye
+FROM --platform=arm64 python:3.11.9-bookworm
 # ARG BUILDPLATFORM
 # FROM python:3.11.7-bullseye
 
